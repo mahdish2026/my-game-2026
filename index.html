@@ -4501,16 +4501,20 @@ async function getAIHint() {
         const userAnswer = q.type === 'tf' ? 'انتخاب اشتباه' : 'پاسخ انتخابی';
         const correctAnswer = q.type === 'tf' ? (q.answer ? 'صحیح' : 'غلط') : q.options[q.answer];
         
+        // نمایش پیام انتظار
+        showHakimMessage('🧙‍♂️ حکیم داره فکر می‌کنه...', {}, { emoji: '🤔', autoHide: false });
+        
         const aiFeedback = await getAIFeedback(
           q.q, userAnswer, correctAnswer, q.explanation,
           lesson ? `درس ${lesson}` : ''
         );
         
-        if (aiFeedback) {
+        if (aiFeedback && aiFeedback.length > 5) {
           showHakimMessage(aiFeedback, {}, { emoji: '🧙‍♂️', autoHide: false });
+        } else {
+          showHakimMessage('💡 پاسخ درست رو که خوندی، یه قدم به جلو رفتی. ادامه بده!', {}, { emoji: '💪', autoHide: false });
         }
-      }, 1200);
-    }
+      }, 800);
 
         if (lesson && p.lesson[lesson] && p.lesson[lesson].w >= 2 && !p.weakLessonWarned[lesson]) {
           p.weakLessonWarned[lesson] = true;
