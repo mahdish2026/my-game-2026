@@ -5162,6 +5162,26 @@ body[data-theme="flag"] .hakim-panel { background: linear-gradient(145deg, rgba(
       
       setTimeout(() => { checkChallenges(); }, 2200);
 
+            // 📤 ارسال نتایج به سرور
+      try {
+        const lessonStats = state.profile ? state.profile.lesson : {};
+        fetch('https://hakim-game-worker.mahdisharifian7.workers.dev/save', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            studentName: name,
+            score: s,
+            totalQuestions: QUESTIONS.length,
+            conqueredCities: state.conqueredCities,
+            hearts: state.hearts,
+            maxCombo: maxCombo,
+            totalStars: totalStarsEarned,
+            lessonStats: lessonStats,
+            commander: state.commander
+          })
+        }).catch(e => console.log('ارسال نشد:', e));
+      } catch(e) { console.log(e); }
+      
       if (s >= 16) {
         playVictoryMusic();
       } else {
