@@ -28,6 +28,100 @@
     font-size: 0.8rem;
     margin-bottom: 24px;
   }
+
+  /* ===== صفحه رمز ===== */
+  .login-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+  }
+  .login-box {
+    max-width: 400px;
+    width: 100%;
+    background: linear-gradient(145deg, #2a1506, #1b0c03);
+    border: 2px solid #c9941a;
+    border-radius: 20px;
+    padding: 30px 24px;
+    text-align: center;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.7);
+  }
+  .login-icon {
+    font-size: 3rem;
+    margin-bottom: 12px;
+    filter: drop-shadow(0 0 15px rgba(245,200,66,0.5));
+  }
+  .login-title {
+    color: #f5c842;
+    font-size: 1.1rem;
+    font-weight: 900;
+    margin-bottom: 6px;
+  }
+  .login-sub {
+    color: #bda282;
+    font-size: 0.75rem;
+    margin-bottom: 20px;
+    line-height: 1.6;
+  }
+  .login-input {
+    width: 100%;
+    padding: 14px 18px;
+    border-radius: 14px;
+    border: 1.5px solid rgba(201,148,26,0.4);
+    background: rgba(0,0,0,0.4);
+    color: #f5edd6;
+    font-family: inherit;
+    font-size: 1.1rem;
+    text-align: center;
+    letter-spacing: 4px;
+    transition: all 0.3s;
+    outline: none;
+  }
+  .login-input:focus {
+    border-color: #f5c842;
+    box-shadow: 0 0 15px rgba(245,200,66,0.3);
+  }
+  .login-btn {
+    width: 100%;
+    margin-top: 16px;
+    padding: 14px;
+    background: linear-gradient(135deg, #c9941a, #f5c842);
+    color: #120500;
+    border: none;
+    border-radius: 30px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(245,200,66,0.3);
+    transition: all 0.2s;
+  }
+  .login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(245,200,66,0.5);
+  }
+  .login-btn:active {
+    transform: scale(0.97);
+  }
+  .login-error {
+    color: #e74c3c;
+    font-size: 0.75rem;
+    margin-top: 12px;
+    font-weight: 700;
+    display: none;
+  }
+  .login-error.show { display: block; }
+  .login-hint {
+    color: #5a4028;
+    font-size: 0.65rem;
+    margin-top: 16px;
+    line-height: 1.6;
+  }
+
+  /* ===== پنل اصلی ===== */
+  #mainPanel { display: none; }
+  #mainPanel.show { display: block; }
+
   .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -78,10 +172,7 @@
     justify-content: space-between;
     align-items: center;
   }
-  .lesson-pct {
-    font-size: 0.9rem;
-    color: #f5c842;
-  }
+  .lesson-pct { font-size: 0.9rem; color: #f5c842; }
   .lesson-bar {
     height: 10px;
     background: rgba(255,255,255,0.05);
@@ -120,12 +211,8 @@
     text-align: center;
     border-bottom: 1px solid rgba(201,148,26,0.1);
   }
-  .students-table tr:hover {
-    background: rgba(245,200,66,0.05);
-  }
-  .students-table tr:last-child td {
-    border-bottom: none;
-  }
+  .students-table tr:hover { background: rgba(245,200,66,0.05); }
+  .students-table tr:last-child td { border-bottom: none; }
   .score-badge {
     display: inline-block;
     padding: 3px 10px;
@@ -160,11 +247,7 @@
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(245,200,66,0.5);
   }
-  .loading {
-    text-align: center;
-    padding: 40px;
-    color: #f5c842;
-  }
+  .loading { text-align: center; padding: 40px; color: #f5c842; }
   .last-update {
     text-align: center;
     color: #bda282;
@@ -179,23 +262,63 @@
     background: rgba(155,89,182,0.2);
     color: #d5b3e8;
   }
+  .logout-btn {
+    display: block;
+    margin: 20px auto 0;
+    padding: 8px 20px;
+    background: rgba(139,26,26,0.3);
+    color: #ff9999;
+    border: 1px solid rgba(231,76,60,0.4);
+    border-radius: 20px;
+    font-family: inherit;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .logout-btn:hover {
+    background: rgba(139,26,26,0.5);
+    border-color: #e74c3c;
+  }
 </style>
 </head>
 <body>
-<div class="container">
-  <h1>📊 پنل معلم</h1>
-  <div class="subtitle">فتح کهن دیار ایران — مطالعات اجتماعی پایه پنجم</div>
-  
-  <div id="content">
-    <div class="loading">⏳ در حال بارگذاری...</div>
+
+<!-- ===== صفحه رمز ===== -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-box">
+    <div class="login-icon">🔐</div>
+    <div class="login-title">ورود به پنل معلم</div>
+    <div class="login-sub">برای دیدن اطلاعات کلاس، رمز عبور رو وارد کن</div>
+    <input type="password" id="loginPassword" class="login-input" placeholder="••••" maxlength="20" onkeydown="if(event.key==='Enter') checkLogin()">
+    <button class="login-btn" onclick="checkLogin()">🔓 ورود</button>
+    <div class="login-error" id="loginError">❌ رمز اشتباهه!</div>
+    <div class="login-hint">این پنل مخصوص معلمه</div>
   </div>
-  
-  <button class="refresh-btn" onclick="loadData()">🔄 به‌روزرسانی</button>
-  <div class="last-update" id="lastUpdate"></div>
+</div>
+
+<!-- ===== پنل اصلی ===== -->
+<div id="mainPanel">
+  <div class="container">
+    <h1>📊 پنل معلم</h1>
+    <div class="subtitle">فتح کهن دیار ایران — مطالعات اجتماعی پایه پنجم</div>
+    
+    <div id="content">
+      <div class="loading">⏳ در حال بارگذاری...</div>
+    </div>
+    
+    <button class="refresh-btn" onclick="loadData(false)">🔄 به‌روزرسانی</button>
+    <div class="last-update" id="lastUpdate"></div>
+    <button class="logout-btn" onclick="logout()">🚪 خروج از پنل</button>
+  </div>
 </div>
 
 <script>
 const WORKER_URL = 'https://hakim-game-worker.mahdisharifian7.workers.dev';
+const PASSWORD = 'hakim2026';
+const AUTH_KEY = 'ftah_teacher_auth';
+const AUTH_DURATION = 7 * 24 * 60 * 60 * 1000; // ۷ روز
+
 const COMMANDER_NAMES = {
   abumuslim: '⚔️ ابومسلم',
   nizam: '📚 خواجه نظام‌الملک',
@@ -208,6 +331,50 @@ const LESSON_NAMES = {
   20: 'درس ۲۰ — حمله مغول',
   21: 'درس ۲۱ — بازسازی ایران'
 };
+
+function checkLogin() {
+  const input = document.getElementById('loginPassword');
+  const error = document.getElementById('loginError');
+  const password = input.value.trim();
+  
+  if (password === PASSWORD) {
+    try {
+      localStorage.setItem(AUTH_KEY, JSON.stringify({ time: Date.now() }));
+    } catch(e) {}
+    showMainPanel();
+  } else {
+    error.classList.add('show');
+    input.value = '';
+    input.focus();
+    setTimeout(() => error.classList.remove('show'), 2000);
+  }
+}
+
+function isAuthenticated() {
+  try {
+    const auth = JSON.parse(localStorage.getItem(AUTH_KEY));
+    if (auth && auth.time && (Date.now() - auth.time) < AUTH_DURATION) {
+      return true;
+    }
+  } catch(e) {}
+  return false;
+}
+
+function showMainPanel() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('mainPanel').classList.add('show');
+  loadData(false);
+  setInterval(() => loadData(true), 60000);
+}
+
+function logout() {
+  try {
+    localStorage.removeItem(AUTH_KEY);
+  } catch(e) {}
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('mainPanel').classList.remove('show');
+  document.getElementById('loginPassword').value = '';
+}
 
 async function loadData(isAutoRefresh) {
   const content = document.getElementById('content');
@@ -229,7 +396,6 @@ async function loadData(isAutoRefresh) {
       return;
     }
     
-    // آمار کلی
     let html = '<div class="stats-grid">';
     html += `<div class="stat-box"><span class="num">${stats.total_plays || 0}</span><div class="label">تعداد بازی</div></div>`;
     html += `<div class="stat-box"><span class="num">${Math.round(stats.avg_score || 0)}</span><div class="label">میانگین امتیاز</div></div>`;
@@ -237,7 +403,6 @@ async function loadData(isAutoRefresh) {
     html += `<div class="stat-box"><span class="num">${stats.min_score || 0}</span><div class="label">پایین‌ترین امتیاز</div></div>`;
     html += '</div>';
     
-    // تحلیل درس‌ها
     const lessonStats = { 18: {c:0,w:0}, 19: {c:0,w:0}, 20: {c:0,w:0}, 21: {c:0,w:0} };
     students.forEach(s => {
       if (s.lesson_stats) {
@@ -273,7 +438,6 @@ async function loadData(isAutoRefresh) {
       `;
     }
     
-    // لیست دانش‌آموزان
     html += '<div class="section-title">👥 لیست دانش‌آموزان</div>';
     html += '<table class="students-table"><thead><tr>';
     html += '<th>ردیف</th><th>نام</th><th>امتیاز</th><th>شهرها</th><th>قلب</th><th>زنجیره</th><th>سردار</th><th>تاریخ</th>';
@@ -308,9 +472,12 @@ async function loadData(isAutoRefresh) {
   }
 }
 
-loadData(false);
-// هر ۶۰ ثانیه خودکار به‌روزرسانی (بدون نمایش «در حال بارگذاری»)
-setInterval(() => loadData(true), 60000);
+// شروع
+if (isAuthenticated()) {
+  showMainPanel();
+} else {
+  document.getElementById('loginPassword').focus();
+}
 </script>
 </body>
 </html>
