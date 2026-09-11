@@ -4407,6 +4407,63 @@ body[data-theme="flag"] .hakim-panel { background: linear-gradient(145deg, rgba(
       }
     }
 
+    // ===== تابع بازخورد هوشمند از AI =====
+async function getAIFeedback(question, userAnswer, correctAnswer, explanation, lesson) {
+  try {
+    const response = await fetch('https://hakim-game-worker.mahdisharifian7.workers.dev/ai/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        question: question,
+        userAnswer: userAnswer,
+        correctAnswer: correctAnswer,
+        explanation: explanation,
+        lesson: lesson,
+        studentName: studentName || 'دوست من',
+        score: state.score,
+        hearts: state.hearts
+      })
+    });
+    const data = await response.json();
+    return data.feedback || null;
+  } catch (e) {
+    console.warn('AI feedback error:', e);
+    return null;
+  }
+}
+
+// ===== تابع راهنمایی هوشمند =====
+async function getAIHint() {
+  if (state.answered) return;
+  const q = QUESTIONS[state.currentQ];
+  if (!q) return;
+
+  showPopup('🤔 حکیم داره فکر می‌کنه...');
+
+  try {
+    const response = await fetch('https://hakim-game-worker.mahdisharifian7.workers.dev/ai/hint', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        question: q.q,
+        options: q.type === 'tf' ? ['صحیح', 'غلط'] : q.options,
+        lesson: getLessonFromQ(q) ? `درس ${getLessonFromQ(q)}` : 'تاریخ ایران',
+        cityName: CITIES[q.city]?.name || ''
+      })
+    });
+    const data = await response.json();
+    if (data.hint) {
+      showHakimMessage(data.hint, {}, { emoji: '💡', autoHide: false });
+      showPopup('💡 راهنمایی حکیم اومد!');
+    } else {
+      showPopup('❌ الان نمی‌تونم راهنمایی کنم');
+    }
+  } catch (e) {
+    console.warn('AI hint error:', e);
+    showPopup('❌ مشکل در ارتباط با حکیم');
+  }
+}
+
     function hakimReactToAnswer(correct, timeUsed, lesson, wasTimeout) {
       ensureProfile();
       const p = state.profile;
