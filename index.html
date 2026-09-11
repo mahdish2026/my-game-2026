@@ -4860,6 +4860,29 @@ async function getAIHint() {
       document.getElementById('q-number-label').textContent = `سوال ${toPersianNum(state.currentQ + 1)} از ۲۰`;
       document.getElementById('q-city-badge').textContent = CITIES[q.city].name;
       document.getElementById('question-text').textContent = q.q;
+      
+// ===== دکمه راهنمایی حکیم =====
+const oldHintBtn = document.getElementById('hintBtnWrap');
+if (oldHintBtn) oldHintBtn.remove();
+
+const hintBtnHtml = `
+  <div id="hintBtnWrap" style="text-align:center;margin:10px 0;">
+    <button id="hintBtn" onclick="getAIHint()" style="
+      background: linear-gradient(135deg, #8e44ad, #9b59b6);
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      padding: 10px 24px;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(142, 68, 173, 0.4);
+      transition: all 0.2s;
+    ">💡 راهنمایی حکیم</button>
+  </div>
+`;
+document.getElementById('question-text').insertAdjacentHTML('afterend', hintBtnHtml);
       const city = CITIES[q.city];
       const pct = state.cityCorrect / city.needCorrect * 100;
       document.getElementById('city-progress-fill').style.width = Math.min(100, pct) + '%';
