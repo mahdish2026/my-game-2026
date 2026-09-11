@@ -4484,14 +4484,33 @@ async function getAIHint() {
         } else {
           showHakimMessage(pickPhrase(HAKIM_PHRASES.correctMedium), { name }, { emoji: '😊' });
         }
+} else {
+    if (wasTimeout) {
+      showHakimMessage(pickPhrase(HAKIM_PHRASES.timeout), { name }, { emoji: '⏳' });
+    } else {
+      if (timeUsed <= 4) {
+        showHakimMessage(pickPhrase(HAKIM_PHRASES.wrongFast), { name }, { emoji: '😅' });
       } else {
-        if (wasTimeout) {
-          showHakimMessage(pickPhrase(HAKIM_PHRASES.timeout), { name }, { emoji: '⏳' });
-        } else if (timeUsed <= 4) {
-          showHakimMessage(pickPhrase(HAKIM_PHRASES.wrongFast), { name }, { emoji: '😅' });
-        } else {
-          showHakimMessage(pickPhrase(HAKIM_PHRASES.wrong), { name }, { emoji: '🤔' });
+        showHakimMessage(pickPhrase(HAKIM_PHRASES.wrong), { name }, { emoji: '🤔' });
+      }
+      
+      // ===== بعد از ۱ ثانیه، بازخورد AI =====
+      setTimeout(async () => {
+        const q = QUESTIONS[state.currentQ];
+        if (!q) return;
+        const userAnswer = q.type === 'tf' ? 'انتخاب اشتباه' : 'پاسخ انتخابی';
+        const correctAnswer = q.type === 'tf' ? (q.answer ? 'صحیح' : 'غلط') : q.options[q.answer];
+        
+        const aiFeedback = await getAIFeedback(
+          q.q, userAnswer, correctAnswer, q.explanation,
+          lesson ? `درس ${lesson}` : ''
+        );
+        
+        if (aiFeedback) {
+          showHakimMessage(aiFeedback, {}, { emoji: '🧙‍♂️', autoHide: false });
         }
+      }, 1200);
+    }
 
         if (lesson && p.lesson[lesson] && p.lesson[lesson].w >= 2 && !p.weakLessonWarned[lesson]) {
           p.weakLessonWarned[lesson] = true;
