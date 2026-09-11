@@ -209,9 +209,12 @@ const LESSON_NAMES = {
   21: 'درس ۲۱ — بازسازی ایران'
 };
 
-async function loadData() {
+async function loadData(isAutoRefresh) {
   const content = document.getElementById('content');
-  content.innerHTML = '<div class="loading">⏳ در حال بارگذاری...</div>';
+  
+  if (!isAutoRefresh) {
+    content.innerHTML = '<div class="loading">⏳ در حال بارگذاری...</div>';
+  }
   
   try {
     const [listRes, statsRes] = await Promise.all([
