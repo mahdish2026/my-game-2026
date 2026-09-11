@@ -308,9 +308,9 @@ async function loadData(isAutoRefresh) {
   }
 }
 
-loadData();
-// هر ۳۰ ثانیه خودکار به‌روزرسانی
-setInterval(loadData, 30000);
+loadData(false);
+// هر ۶۰ ثانیه خودکار به‌روزرسانی (بدون نمایش «در حال بارگذاری»)
+setInterval(() => loadData(true), 60000);
 </script>
 </body>
 </html>
