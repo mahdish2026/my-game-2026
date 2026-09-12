@@ -20,10 +20,13 @@
     --gold-light: #fff3b0;
     --dark-bg: #140b04;
     --card-bg: linear-gradient(145deg, #2a1506, #1b0c03);
+    --card-bg-gold: linear-gradient(145deg, #3a1e08, #2a1506);
     --text-light: #f5edd6;
     --text-muted: #bda282;
     --green: #2ecc71;
+    --blue: #3498db;
     --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    --shadow-gold: 0 10px 40px rgba(245, 200, 66, 0.15);
   }
 
   body {
@@ -45,64 +48,122 @@
     padding: 24px 16px 40px;
   }
 
-  /* ===== هدر ===== */
+  /* ===== هدر با عمق بیشتر ===== */
   .header {
     text-align: center;
-    padding: 24px 16px 20px;
-    margin-bottom: 20px;
+    padding: 32px 16px 28px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 280px;
+    height: 280px;
+    background: radial-gradient(circle, rgba(245, 200, 66, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .header-content {
+    position: relative;
+    z-index: 1;
   }
 
   .header-emblem {
-    font-size: 3rem;
+    font-size: 3.8rem;
     line-height: 1;
-    margin-bottom: 8px;
-    filter: drop-shadow(0 0 20px rgba(245, 200, 66, 0.4));
+    margin-bottom: 12px;
+    filter: drop-shadow(0 0 25px rgba(245, 200, 66, 0.6));
+    animation: emblemFloat 4s ease-in-out infinite;
+    display: inline-block;
+  }
+
+  @keyframes emblemFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
   }
 
   .header-title {
-    font-size: clamp(1.8rem, 6vw, 2.4rem);
+    font-size: clamp(2rem, 7vw, 2.8rem);
     font-weight: 900;
     background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 6px;
-    letter-spacing: 1px;
+    margin-bottom: 8px;
+    letter-spacing: 2px;
+    filter: drop-shadow(0 4px 12px rgba(245, 200, 66, 0.3));
   }
 
   .header-slogan {
     font-size: clamp(0.85rem, 3.5vw, 1rem);
     color: var(--text-muted);
-    letter-spacing: 1.5px;
+    letter-spacing: 2px;
     font-weight: 600;
   }
 
-  /* ===== کارت حکیم ===== */
+  .header-slogan .divider {
+    color: var(--gold);
+    margin: 0 6px;
+    opacity: 0.7;
+  }
+
+  /* ===== کارت حکیم — بازطراحی کامل ===== */
   .hakim-card {
-    background: var(--card-bg);
-    border: 1.5px solid rgba(197, 148, 26, 0.35);
-    border-radius: 20px;
-    padding: 20px 18px;
-    margin-bottom: 24px;
+    background:
+      radial-gradient(ellipse at top right, rgba(245, 200, 66, 0.08), transparent 60%),
+      var(--card-bg);
+    border: 1.5px solid rgba(197, 148, 26, 0.4);
+    border-radius: 22px;
+    padding: 22px 20px;
+    margin-bottom: 28px;
     display: flex;
     align-items: center;
-    gap: 16px;
-    box-shadow: var(--shadow);
+    gap: 18px;
+    box-shadow: var(--shadow-gold);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hakim-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(245, 200, 66, 0.1) 0%, transparent 70%);
+    pointer-events: none;
   }
 
   .hakim-avatar {
     flex-shrink: 0;
-    width: 72px;
-    height: 72px;
+    width: 84px;
+    height: 84px;
     border-radius: 50%;
     background: radial-gradient(circle at 30% 30%, #f5c842 0%, #b87a18 50%, #6b4008 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 2px solid rgba(255, 245, 200, 0.5);
-    box-shadow: 0 0 18px rgba(245, 200, 66, 0.4);
+    border: 3px solid rgba(255, 245, 200, 0.55);
+    box-shadow:
+      0 0 25px rgba(245, 200, 66, 0.5),
+      inset 0 -3px 8px rgba(0, 0, 0, 0.3);
     overflow: hidden;
     position: relative;
+    animation: hakimBreathe 4s ease-in-out infinite;
+    z-index: 1;
+  }
+
+  @keyframes hakimBreathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.04); }
   }
 
   .hakim-avatar svg {
@@ -114,73 +175,84 @@
   .hakim-message {
     flex: 1;
     min-width: 0;
+    position: relative;
+    z-index: 1;
   }
 
   .hakim-name {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     color: var(--gold);
     font-weight: 800;
-    margin-bottom: 4px;
+    margin-bottom: 8px;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 7px;
   }
 
   .hakim-dot {
-    width: 7px;
-    height: 7px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     background: var(--green);
-    box-shadow: 0 0 8px var(--green);
+    box-shadow: 0 0 10px var(--green);
+    animation: dotPulse 2s infinite;
+  }
+
+  @keyframes dotPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
   }
 
   .hakim-text {
-    font-size: 0.9rem;
+    font-size: 0.92rem;
     color: var(--text-light);
-    line-height: 1.8;
+    line-height: 1.9;
     transition: opacity 0.4s ease;
+    min-height: 2.6em;
   }
 
-  /* ===== عنوان بخش ===== */
+  /* ===== عنوان بخش — جذاب‌تر ===== */
   .section-title {
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-weight: 800;
     color: var(--gold);
-    margin-bottom: 12px;
+    margin-bottom: 14px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    letter-spacing: 0.5px;
   }
 
-  .section-title::after {
-    content: '';
+  .section-title .icon {
+    font-size: 1.3rem;
+    filter: drop-shadow(0 0 8px rgba(245, 200, 66, 0.4));
+  }
+
+  .section-title .line {
     flex: 1;
-    height: 1px;
-    background: linear-gradient(to left, var(--gold-dark), transparent);
+    height: 2px;
+    background: linear-gradient(to left, var(--gold-dark), rgba(197, 148, 26, 0.1));
+    border-radius: 2px;
   }
 
-  /* ===== کارت بازی ===== */
+  /* ===== کارت بازی — برجسته‌تر ===== */
   .game-card {
     display: block;
     text-decoration: none;
-    background: var(--card-bg);
-    border: 1.5px solid rgba(197, 148, 26, 0.35);
-    border-radius: 18px;
-    padding: 18px;
-    margin-bottom: 24px;
-    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-    box-shadow: var(--shadow);
+    background:
+      radial-gradient(ellipse at top right, rgba(245, 200, 66, 0.12), transparent 60%),
+      var(--card-bg-gold);
+    border: 2px solid rgba(197, 148, 26, 0.5);
+    border-radius: 20px;
+    padding: 22px 20px;
+    margin-bottom: 28px;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 40px rgba(245, 200, 66, 0.08);
     color: inherit;
     position: relative;
     overflow: hidden;
-  }
-
-  .game-card:hover,
-  .game-card:focus-visible {
-    transform: translateY(-3px);
-    border-color: var(--gold);
-    box-shadow: 0 14px 40px rgba(245, 200, 66, 0.2);
-    outline: none;
   }
 
   .game-card::before {
@@ -189,28 +261,47 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 3px;
+    height: 4px;
     background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    opacity: 0.6;
+    opacity: 0.8;
+  }
+
+  .game-card::after {
+    content: '⭐';
+    position: absolute;
+    top: 12px;
+    left: 14px;
+    font-size: 1.1rem;
+    filter: drop-shadow(0 0 6px rgba(245, 200, 66, 0.8));
+    opacity: 0.9;
+  }
+
+  .game-card:hover,
+  .game-card:focus-visible {
+    transform: translateY(-5px) scale(1.01);
+    border-color: var(--gold);
+    box-shadow: 0 18px 50px rgba(245, 200, 66, 0.25), 0 0 60px rgba(245, 200, 66, 0.15);
+    outline: none;
   }
 
   .game-card-inner {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 16px;
   }
 
   .game-icon {
     flex-shrink: 0;
-    width: 56px;
-    height: 56px;
-    border-radius: 14px;
-    background: rgba(197, 148, 26, 0.15);
-    border: 1px solid rgba(197, 148, 26, 0.4);
+    width: 68px;
+    height: 68px;
+    border-radius: 18px;
+    background: linear-gradient(145deg, rgba(245, 200, 66, 0.2), rgba(197, 148, 26, 0.1));
+    border: 2px solid rgba(245, 200, 66, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.8rem;
+    font-size: 2.2rem;
+    box-shadow: 0 4px 15px rgba(245, 200, 66, 0.2), inset 0 1px 3px rgba(255,255,255,0.15);
   }
 
   .game-info {
@@ -219,17 +310,19 @@
   }
 
   .game-name {
-    font-size: 1.1rem;
-    font-weight: 800;
+    font-size: 1.25rem;
+    font-weight: 900;
     color: var(--gold-light);
-    margin-bottom: 4px;
+    margin-bottom: 6px;
+    text-shadow: 0 2px 8px rgba(245, 200, 66, 0.3);
   }
 
   .game-desc {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    line-height: 1.6;
-    margin-bottom: 6px;
+    font-size: 0.82rem;
+    color: var(--text-light);
+    line-height: 1.7;
+    margin-bottom: 10px;
+    opacity: 0.9;
   }
 
   .game-meta {
@@ -239,48 +332,43 @@
   }
 
   .game-tag {
-    font-size: 0.65rem;
+    font-size: 0.68rem;
     color: var(--gold);
-    background: rgba(197, 148, 26, 0.12);
-    border: 1px solid rgba(197, 148, 26, 0.3);
-    padding: 2px 8px;
-    border-radius: 10px;
+    background: rgba(197, 148, 26, 0.15);
+    border: 1px solid rgba(245, 200, 66, 0.35);
+    padding: 3px 10px;
+    border-radius: 12px;
     font-weight: 700;
   }
 
   .game-arrow {
     flex-shrink: 0;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     color: var(--gold);
-    transition: transform 0.25s ease;
+    transition: transform 0.3s ease;
+    filter: drop-shadow(0 0 6px rgba(245, 200, 66, 0.5));
   }
 
   .game-card:hover .game-arrow {
-    transform: translateX(-6px);
+    transform: translateX(-8px);
   }
 
   /* ===== کارت معلم ===== */
   .teacher-card {
     display: block;
     text-decoration: none;
-    background: var(--card-bg);
-    border: 1.5px solid rgba(197, 148, 26, 0.35);
+    background:
+      radial-gradient(ellipse at top right, rgba(52, 152, 219, 0.1), transparent 60%),
+      var(--card-bg);
+    border: 1.5px solid rgba(52, 152, 219, 0.4);
     border-radius: 18px;
     padding: 18px;
-    margin-bottom: 24px;
+    margin-bottom: 28px;
     transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
     box-shadow: var(--shadow);
     color: inherit;
     position: relative;
     overflow: hidden;
-  }
-
-  .teacher-card:hover,
-  .teacher-card:focus-visible {
-    transform: translateY(-3px);
-    border-color: var(--gold);
-    box-shadow: 0 14px 40px rgba(245, 200, 66, 0.2);
-    outline: none;
   }
 
   .teacher-card::before {
@@ -290,8 +378,16 @@
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, transparent, #3498db, transparent);
-    opacity: 0.6;
+    background: linear-gradient(90deg, transparent, var(--blue), transparent);
+    opacity: 0.7;
+  }
+
+  .teacher-card:hover,
+  .teacher-card:focus-visible {
+    transform: translateY(-4px);
+    border-color: var(--blue);
+    box-shadow: 0 14px 40px rgba(52, 152, 219, 0.25);
+    outline: none;
   }
 
   .teacher-card-inner {
@@ -306,7 +402,7 @@
     height: 56px;
     border-radius: 14px;
     background: rgba(52, 152, 219, 0.15);
-    border: 1px solid rgba(52, 152, 219, 0.4);
+    border: 1.5px solid rgba(52, 152, 219, 0.4);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -319,7 +415,7 @@
   }
 
   .teacher-name {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 800;
     color: #a8d8ff;
     margin-bottom: 4px;
@@ -333,8 +429,8 @@
 
   .teacher-arrow {
     flex-shrink: 0;
-    font-size: 1.2rem;
-    color: #3498db;
+    font-size: 1.3rem;
+    color: var(--blue);
     transition: transform 0.25s ease;
   }
 
@@ -342,79 +438,190 @@
     transform: translateX(-6px);
   }
 
+  /* ===== بخش راهنمای شروع ===== */
+  .start-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .step-item {
+    background: var(--card-bg);
+    border: 1.5px solid rgba(197, 148, 26, 0.3);
+    border-radius: 16px;
+    padding: 16px 14px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: transform 0.25s ease, border-color 0.25s ease;
+  }
+
+  .step-item:hover {
+    transform: translateY(-3px);
+    border-color: var(--gold);
+  }
+
+  .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    color: #120500;
+    font-size: 1.15rem;
+    font-weight: 900;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 12px rgba(245, 200, 66, 0.35);
+  }
+
+  .step-text {
+    font-size: 0.82rem;
+    color: var(--text-light);
+    line-height: 1.6;
+    font-weight: 600;
+  }
+
   /* ===== بخش اطلاعات ===== */
   .info-box {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(197, 148, 26, 0.2);
-    border-radius: 16px;
-    padding: 18px;
-    margin-bottom: 20px;
+    background:
+      radial-gradient(ellipse at top right, rgba(245, 200, 66, 0.06), transparent 60%),
+      var(--card-bg);
+    border: 1.5px solid rgba(197, 148, 26, 0.3);
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 24px;
     box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .info-box::before {
+    content: '🧙‍♂️';
+    position: absolute;
+    top: 14px;
+    left: 16px;
+    font-size: 1.4rem;
+    opacity: 0.35;
   }
 
   .info-text {
-    font-size: 0.85rem;
+    font-size: 0.87rem;
     color: var(--text-light);
     line-height: 2;
     text-align: justify;
+    padding-right: 8px;
   }
 
   .info-text strong {
     color: var(--gold);
+    font-weight: 800;
   }
 
-  /* ===== فوتر ===== */
+  /* ===== فوتر زیبا ===== */
   .footer {
     text-align: center;
-    padding: 24px 16px 10px;
-    margin-top: 20px;
-    border-top: 1px solid rgba(197, 148, 26, 0.15);
+    padding: 28px 16px 10px;
+    margin-top: 24px;
+    border-top: 1px solid rgba(197, 148, 26, 0.2);
+    position: relative;
+  }
+
+  .footer::before {
+    content: '✦  ✦  ✦';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--dark-bg);
+    color: var(--gold);
+    padding: 0 14px;
+    font-size: 0.7rem;
+    letter-spacing: 6px;
+    opacity: 0.7;
   }
 
   .footer-title {
-    font-size: 0.95rem;
-    font-weight: 800;
+    font-size: 1.05rem;
+    font-weight: 900;
     color: var(--gold);
-    margin-bottom: 4px;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
   }
 
   .footer-text {
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     color: var(--text-muted);
-    line-height: 1.8;
+    line-height: 1.9;
+  }
+
+  .footer-heart {
+    color: #e74c3c;
+    display: inline-block;
+    animation: heartBeat 1.5s ease-in-out infinite;
+  }
+
+  @keyframes heartBeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
   }
 
   /* ===== واکنش‌گرا ===== */
   @media (max-width: 480px) {
     .hakim-card {
-      padding: 16px 14px;
-      gap: 12px;
+      padding: 18px 16px;
+      gap: 14px;
     }
 
     .hakim-avatar {
-      width: 60px;
-      height: 60px;
+      width: 68px;
+      height: 68px;
     }
 
     .hakim-text {
       font-size: 0.85rem;
+      line-height: 1.75;
     }
 
-    .game-icon,
+    .game-card {
+      padding: 18px 16px;
+    }
+
+    .game-icon {
+      width: 56px;
+      height: 56px;
+      font-size: 1.8rem;
+    }
+
+    .game-name {
+      font-size: 1.1rem;
+    }
+
+    .game-desc {
+      font-size: 0.75rem;
+    }
+
     .teacher-icon {
       width: 48px;
       height: 48px;
       font-size: 1.5rem;
     }
 
-    .game-name,
     .teacher-name {
       font-size: 0.95rem;
     }
 
-    .game-desc,
     .teacher-desc {
       font-size: 0.72rem;
+    }
+
+    .step-item {
+      padding: 14px 10px;
+    }
+
+    .step-text {
+      font-size: 0.78rem;
     }
   }
 
@@ -426,8 +633,9 @@
 
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
-      transition-duration: 0.01ms !important;
       animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
     }
   }
 </style>
@@ -438,9 +646,13 @@
 
   <!-- ===== هدر ===== -->
   <header class="header">
-    <div class="header-emblem" aria-hidden="true">🧙‍♂️</div>
-    <h1 class="header-title">حکیمستان</h1>
-    <p class="header-slogan">دیار حکیم، سرزمین یادگیری</p>
+    <div class="header-content">
+      <div class="header-emblem" aria-hidden="true">🧙‍♂️</div>
+      <h1 class="header-title">حکیمستان</h1>
+      <p class="header-slogan">
+        دیار حکیم <span class="divider">✦</span> سرزمین یادگیری
+      </p>
+    </div>
   </header>
 
   <!-- ===== کارت حکیم ===== -->
@@ -453,26 +665,18 @@
             <stop offset="100%" stop-color="#d9a878"/>
           </radialGradient>
         </defs>
-        <!-- عمامه -->
         <path d="M20,32 Q50,12 80,32 Q80,44 74,46 L26,46 Q20,44 20,32 Z" fill="#7a4420"/>
         <path d="M20,32 Q50,12 80,32" stroke="#a0662c" stroke-width="2.5" fill="none" stroke-linecap="round"/>
         <circle cx="50" cy="20" r="3.5" fill="#a0662c"/>
-        <!-- صورت -->
         <ellipse cx="50" cy="58" rx="26" ry="26" fill="url(#hkSkin)"/>
-        <!-- گوش‌ها -->
         <ellipse cx="24" cy="58" rx="3" ry="5" fill="#d9a878"/>
         <ellipse cx="76" cy="58" rx="3" ry="5" fill="#d9a878"/>
-        <!-- ریش -->
         <path d="M30,70 Q28,90 50,92 Q72,90 70,70 Q66,82 50,84 Q34,82 30,70 Z" fill="#f0f0f0" opacity="0.94"/>
-        <!-- ابروها -->
         <path d="M36,51 Q42,49 46,51" stroke="#3a2510" stroke-width="2" fill="none" stroke-linecap="round"/>
         <path d="M54,51 Q58,49 64,51" stroke="#3a2510" stroke-width="2" fill="none" stroke-linecap="round"/>
-        <!-- چشم‌ها -->
         <path d="M38,58 Q42,55 46,58" stroke="#2a1a0a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
         <path d="M54,58 Q58,55 62,58" stroke="#2a1a0a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <!-- بینی -->
         <path d="M48,62 L46,68 Q50,69 54,68 L52,62 Z" fill="#c89868"/>
-        <!-- لبخند -->
         <path d="M44,74 Q50,77 56,74" stroke="#3a2510" stroke-width="2" fill="none" stroke-linecap="round"/>
       </svg>
     </div>
@@ -488,7 +692,11 @@
   </section>
 
   <!-- ===== بازی‌ها ===== -->
-  <h2 class="section-title">🎮 بازی‌ها</h2>
+  <h2 class="section-title">
+    <span class="icon">🎮</span>
+    <span>بازی‌ها</span>
+    <span class="line"></span>
+  </h2>
 
   <a href="games/kohan-diyar.html" class="game-card" aria-label="شروع بازی فتح کهن دیار ایران">
     <div class="game-card-inner">
@@ -506,8 +714,34 @@
     </div>
   </a>
 
+  <!-- ===== چطور شروع کنم؟ ===== -->
+  <h2 class="section-title">
+    <span class="icon">🚀</span>
+    <span>چطور شروع کنم؟</span>
+    <span class="line"></span>
+  </h2>
+
+  <div class="start-steps">
+    <div class="step-item">
+      <div class="step-num">۱</div>
+      <div class="step-text">روی کارت بازی کلیک کن</div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">۲</div>
+      <div class="step-text">نام خودت رو بنویس</div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">۳</div>
+      <div class="step-text">سردارت رو انتخاب کن و بجنگ!</div>
+    </div>
+  </div>
+
   <!-- ===== پنل معلم ===== -->
-  <h2 class="section-title">🛠️ برای معلمان</h2>
+  <h2 class="section-title">
+    <span class="icon">🛠️</span>
+    <span>برای معلمان</span>
+    <span class="line"></span>
+  </h2>
 
   <a href="games/teacher.html" class="teacher-card" aria-label="ورود به پنل معلم">
     <div class="teacher-card-inner">
@@ -521,7 +755,11 @@
   </a>
 
   <!-- ===== درباره حکیم ===== -->
-  <h2 class="section-title">📖 درباره حکیم</h2>
+  <h2 class="section-title">
+    <span class="icon">📖</span>
+    <span>درباره حکیم</span>
+    <span class="line"></span>
+  </h2>
 
   <div class="info-box">
     <p class="info-text">
@@ -533,7 +771,7 @@
   <footer class="footer">
     <div class="footer-title">🧙‍♂️ حکیمستان</div>
     <p class="footer-text">
-      ساخته شده با ❤️ توسط مهدی شریفیان
+      ساخته شده با <span class="footer-heart">❤️</span> توسط مهدی شریفیان
     </p>
   </footer>
 
