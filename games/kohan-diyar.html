@@ -6086,7 +6086,7 @@ function animateTravelDot(fromIndex, toIndex) {
         burstParticles(cx, cy);
         spawnConfetti(25, cx, cy);
         updateHeader();
-        if (state.combo % 3 === 0) { playComboSound(); addHeart(); showComboAlert(); }
+        if (state.combo % 3 === 0) { playComboSound(); addHeart(); }
         checkChallenges(); 
         const city = CITIES[q.city];
         if (state.cityCorrect >= city.needCorrect) {
