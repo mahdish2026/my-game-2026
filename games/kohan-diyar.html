@@ -6976,15 +6976,6 @@ function animateTravelDot(fromIndex, toIndex) {
     function showPopup(msg) { const p = document.getElementById('popup-msg'); p.textContent = msg; p.className = 'popup-msg show'; setTimeout(() => { p.className = 'popup-msg hide'; setTimeout(() => p.className = 'popup-msg', 300); }, 1600); }
 
 
-      '🔥 آتشین! همینطور ادامه بده!',
-      '💪 قوی! غیرقابل توقف!',
-      '🌟 درخشان! نابغه‌ای!',
-      '🎯 دقیق! شاهانه!',
-      '⚡ برقی! چه سرعتی!',
-      '👑 سلطان! بی‌نظیر!',
-      '🏆 قهرمان! به راهت ادامه بده!'
-    ];
-
     function toPersianNum(n) { const map = { '0': '۰', '1': '۱', '2': '۲', '3': '۳', '4': '۴', '5': '۵', '6': '۶', '7': '۷', '8': '۸', '9': '۹' }; return String(n).replace(/[0-9]/g, d => map[d]); }
 
     document.addEventListener('DOMContentLoaded', function() {
