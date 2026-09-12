@@ -6985,7 +6985,6 @@ function animateTravelDot(fromIndex, toIndex) {
       '👑 سلطان! بی‌نظیر!',
       '🏆 قهرمان! به راهت ادامه بده!'
     ];
-    function showComboAlert(msg) { const el = document.getElementById('combo-alert'); el.textContent = msg || COMBO_MESSAGES[Math.floor(Math.random() * COMBO_MESSAGES.length)]; el.className = 'combo-alert show'; setTimeout(() => el.className = 'combo-alert', 2200); }
 
     function toPersianNum(n) { const map = { '0': '۰', '1': '۱', '2': '۲', '3': '۳', '4': '۴', '5': '۵', '6': '۶', '7': '۷', '8': '۸', '9': '۹' }; return String(n).replace(/[0-9]/g, d => map[d]); }
 
