@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#140b04">
+<meta name="description" content="حکیمستان — دیار حکیم، سرزمین یادگیری. پلتفرم آموزشی رایگان برای معلمان و دانش‌آموزان">
+<title>حکیمستان — دیار حکیم، سرزمین یادگیری</title>
+<style>
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :root {
+    --gold: #f5c842;
+    --gold-dark: #c9941a;
+    --gold-light: #fff3b0;
+    --dark-bg: #140b04;
+    --card-bg: linear-gradient(145deg, #2a1506, #1b0c03);
+    --text-light: #f5edd6;
+    --text-muted: #bda282;
+    --green: #2ecc71;
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+
+  body {
+    font-family: 'Vazirmatn', Tahoma, sans-serif;
+    background: var(--dark-bg);
+    color: var(--text-light);
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-image:
+      radial-gradient(ellipse at 15% 15%, rgba(139, 26, 26, 0.15) 0%, transparent 60%),
+      radial-gradient(ellipse at 85% 85%, rgba(197, 148, 26, 0.12) 0%, transparent 60%);
+    background-attachment: fixed;
+    line-height: 1.7;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 24px 16px 40px;
+  }
+
+  /* ===== هدر ===== */
+  .header {
+    text-align: center;
+    padding: 24px 16px 20px;
+    margin-bottom: 20px;
+  }
+
+  .header-emblem {
+    font-size: 3rem;
+    line-height: 1;
+    margin-bottom: 8px;
+    filter: drop-shadow(0 0 20px rgba(245, 200, 66, 0.4));
+  }
+
+  .header-title {
+    font-size: clamp(1.8rem, 6vw, 2.4rem);
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+
+  .header-slogan {
+    font-size: clamp(0.85rem, 3.5vw, 1rem);
+    color: var(--text-muted);
+    letter-spacing: 1.5px;
+    font-weight: 600;
+  }
+
+  /* ===== کارت حکیم ===== */
+  .hakim-card {
+    background: var(--card-bg);
+    border: 1.5px solid rgba(197, 148, 26, 0.35);
+    border-radius: 20px;
+    padding: 20px 18px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--shadow);
+  }
+
+  .hakim-avatar {
+    flex-shrink: 0;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #f5c842 0%, #b87a18 50%, #6b4008 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(255, 245, 200, 0.5);
+    box-shadow: 0 0 18px rgba(245, 200, 66, 0.4);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .hakim-avatar svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .hakim-message {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .hakim-name {
+    font-size: 0.75rem;
+    color: var(--gold);
+    font-weight: 800;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .hakim-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+  }
+
+  .hakim-text {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    line-height: 1.8;
+    transition: opacity 0.4s ease;
+  }
+
+  /* ===== عنوان بخش ===== */
+  .section-title {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--gold);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to left, var(--gold-dark), transparent);
+  }
+
+  /* ===== کارت بازی ===== */
+  .game-card {
+    display: block;
+    text-decoration: none;
+    background: var(--card-bg);
+    border: 1.5px solid rgba(197, 148, 26, 0.35);
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 24px;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: var(--shadow);
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .game-card:hover,
+  .game-card:focus-visible {
+    transform: translateY(-3px);
+    border-color: var(--gold);
+    box-shadow: 0 14px 40px rgba(245, 200, 66, 0.2);
+    outline: none;
+  }
+
+  .game-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.6;
+  }
+
+  .game-card-inner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .game-icon {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: rgba(197, 148, 26, 0.15);
+    border: 1px solid rgba(197, 148, 26, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+  }
+
+  .game-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .game-name {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--gold-light);
+    margin-bottom: 4px;
+  }
+
+  .game-desc {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 6px;
+  }
+
+  .game-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .game-tag {
+    font-size: 0.65rem;
+    color: var(--gold);
+    background: rgba(197, 148, 26, 0.12);
+    border: 1px solid rgba(197, 148, 26, 0.3);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 700;
+  }
+
+  .game-arrow {
+    flex-shrink: 0;
+    font-size: 1.2rem;
+    color: var(--gold);
+    transition: transform 0.25s ease;
+  }
+
+  .game-card:hover .game-arrow {
+    transform: translateX(-6px);
+  }
+
+  /* ===== کارت معلم ===== */
+  .teacher-card {
+    display: block;
+    text-decoration: none;
+    background: var(--card-bg);
+    border: 1.5px solid rgba(197, 148, 26, 0.35);
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 24px;
+    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: var(--shadow);
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .teacher-card:hover,
+  .teacher-card:focus-visible {
+    transform: translateY(-3px);
+    border-color: var(--gold);
+    box-shadow: 0 14px 40px rgba(245, 200, 66, 0.2);
+    outline: none;
+  }
+
+  .teacher-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #3498db, transparent);
+    opacity: 0.6;
+  }
+
+  .teacher-card-inner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .teacher-icon {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: rgba(52, 152, 219, 0.15);
+    border: 1px solid rgba(52, 152, 219, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+  }
+
+  .teacher-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .teacher-name {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #a8d8ff;
+    margin-bottom: 4px;
+  }
+
+  .teacher-desc {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .teacher-arrow {
+    flex-shrink: 0;
+    font-size: 1.2rem;
+    color: #3498db;
+    transition: transform 0.25s ease;
+  }
+
+  .teacher-card:hover .teacher-arrow {
+    transform: translateX(-6px);
+  }
+
+  /* ===== بخش اطلاعات ===== */
+  .info-box {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(197, 148, 26, 0.2);
+    border-radius: 16px;
+    padding: 18px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+
+  .info-text {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    line-height: 2;
+    text-align: justify;
+  }
+
+  .info-text strong {
+    color: var(--gold);
+  }
+
+  /* ===== فوتر ===== */
+  .footer {
+    text-align: center;
+    padding: 24px 16px 10px;
+    margin-top: 20px;
+    border-top: 1px solid rgba(197, 148, 26, 0.15);
+  }
+
+  .footer-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+
+  .footer-text {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+
+  /* ===== واکنش‌گرا ===== */
+  @media (max-width: 480px) {
+    .hakim-card {
+      padding: 16px 14px;
+      gap: 12px;
+    }
+
+    .hakim-avatar {
+      width: 60px;
+      height: 60px;
+    }
+
+    .hakim-text {
+      font-size: 0.85rem;
+    }
+
+    .game-icon,
+    .teacher-icon {
+      width: 48px;
+      height: 48px;
+      font-size: 1.5rem;
+    }
+
+    .game-name,
+    .teacher-name {
+      font-size: 0.95rem;
+    }
+
+    .game-desc,
+    .teacher-desc {
+      font-size: 0.72rem;
+    }
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+    border-radius: 8px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ===== هدر ===== -->
+  <header class="header">
+    <div class="header-emblem" aria-hidden="true">🧙‍♂️</div>
+    <h1 class="header-title">حکیمستان</h1>
+    <p class="header-slogan">دیار حکیم، سرزمین یادگیری</p>
+  </header>
+
+  <!-- ===== کارت حکیم ===== -->
+  <section class="hakim-card" aria-label="پیام از حکیم">
+    <div class="hakim-avatar" aria-hidden="true">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="hkSkin" cx="40%" cy="35%">
+            <stop offset="0%" stop-color="#fce4c4"/>
+            <stop offset="100%" stop-color="#d9a878"/>
+          </radialGradient>
+        </defs>
+        <!-- عمامه -->
+        <path d="M20,32 Q50,12 80,32 Q80,44 74,46 L26,46 Q20,44 20,32 Z" fill="#7a4420"/>
+        <path d="M20,32 Q50,12 80,32" stroke="#a0662c" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <circle cx="50" cy="20" r="3.5" fill="#a0662c"/>
+        <!-- صورت -->
+        <ellipse cx="50" cy="58" rx="26" ry="26" fill="url(#hkSkin)"/>
+        <!-- گوش‌ها -->
+        <ellipse cx="24" cy="58" rx="3" ry="5" fill="#d9a878"/>
+        <ellipse cx="76" cy="58" rx="3" ry="5" fill="#d9a878"/>
+        <!-- ریش -->
+        <path d="M30,70 Q28,90 50,92 Q72,90 70,70 Q66,82 50,84 Q34,82 30,70 Z" fill="#f0f0f0" opacity="0.94"/>
+        <!-- ابروها -->
+        <path d="M36,51 Q42,49 46,51" stroke="#3a2510" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M54,51 Q58,49 64,51" stroke="#3a2510" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- چشم‌ها -->
+        <path d="M38,58 Q42,55 46,58" stroke="#2a1a0a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <path d="M54,58 Q58,55 62,58" stroke="#2a1a0a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <!-- بینی -->
+        <path d="M48,62 L46,68 Q50,69 54,68 L52,62 Z" fill="#c89868"/>
+        <!-- لبخند -->
+        <path d="M44,74 Q50,77 56,74" stroke="#3a2510" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="hakim-message">
+      <div class="hakim-name">
+        <span class="hakim-dot" aria-hidden="true"></span>
+        حکیم، راهنمای تو
+      </div>
+      <p class="hakim-text" id="hakimText">
+        سلام! من حکیمم، راهنمای تو در سرزمین یادگیری. آماده‌ای برای یک سفر آموزشی؟
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== بازی‌ها ===== -->
+  <h2 class="section-title">🎮 بازی‌ها</h2>
+
+  <a href="games/kohan-diyar.html" class="game-card" aria-label="شروع بازی فتح کهن دیار ایران">
+    <div class="game-card-inner">
+      <div class="game-icon" aria-hidden="true">🏰</div>
+      <div class="game-info">
+        <div class="game-name">فتح کهن دیار ایران</div>
+        <p class="game-desc">سفری در تاریخ ایران؛ شهر به شهر پیش برو و تاریخ را زنده کن.</p>
+        <div class="game-meta">
+          <span class="game-tag">📘 مطالعات اجتماعی</span>
+          <span class="game-tag">پایه پنجم</span>
+          <span class="game-tag">دروس ۱۸ تا ۲۱</span>
+        </div>
+      </div>
+      <div class="game-arrow" aria-hidden="true">←</div>
+    </div>
+  </a>
+
+  <!-- ===== پنل معلم ===== -->
+  <h2 class="section-title">🛠️ برای معلمان</h2>
+
+  <a href="games/teacher.html" class="teacher-card" aria-label="ورود به پنل معلم">
+    <div class="teacher-card-inner">
+      <div class="teacher-icon" aria-hidden="true">🔐</div>
+      <div class="teacher-info">
+        <div class="teacher-name">پنل معلم</div>
+        <p class="teacher-desc">مشاهده نتایج دانش‌آموزان، تحلیل درس‌به‌درس، و دریافت گزارش‌ها.</p>
+      </div>
+      <div class="teacher-arrow" aria-hidden="true">←</div>
+    </div>
+  </a>
+
+  <!-- ===== درباره حکیم ===== -->
+  <h2 class="section-title">📖 درباره حکیم</h2>
+
+  <div class="info-box">
+    <p class="info-text">
+      <strong>حکیم</strong>، دانشمندی از دوران طلایی تمدن اسلامی است که در سفرهایش دانش را از نسلی به نسل دیگر منتقل می‌کرد. الان در <strong>حکیمستان</strong> زندگی می‌کند و به دانش‌آموزان و معلمان کمک می‌کند تا در مسیر دانش، سفر کنند.
+    </p>
+  </div>
+
+  <!-- ===== فوتر ===== -->
+  <footer class="footer">
+    <div class="footer-title">🧙‍♂️ حکیمستان</div>
+    <p class="footer-text">
+      ساخته شده با ❤️ توسط مهدی شریفیان
+    </p>
+  </footer>
+
+</div>
+
+<script>
+  (function() {
+    const messages = [
+      'سلام! من حکیمم، راهنمای تو در سرزمین یادگیری.',
+      'کدام بازی رو دوست داری امروز شروع کنی؟',
+      'دانش، بهترین گنج دنیاست. آماده‌ای برای کاوش؟',
+      'هر سوال، یک قدم به جلوست. بیا شروع کنیم!',
+      'حکیمستان، خانه‌ی همه‌ی دانش‌آموزان کوشا.'
+    ];
+
+    let index = 0;
+    const textEl = document.getElementById('hakimText');
+
+    setInterval(function() {
+      index = (index + 1) % messages.length;
+      textEl.style.opacity = '0';
+      setTimeout(function() {
+        textEl.textContent = messages[index];
+        textEl.style.opacity = '1';
+      }, 400);
+    }, 6000);
+  })();
+</script>
+
+</body>
+</html>
