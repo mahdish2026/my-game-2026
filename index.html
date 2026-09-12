@@ -37,14 +37,19 @@
     --gold: #f5c842;
     --gold-dark: #c9941a;
     --gold-light: #fff3b0;
+    --blue: #3498db;
+    --blue-dark: #2980b9;
+    --blue-light: #7bc8ff;
     --bg: #140b04;
     --card: linear-gradient(145deg, #2a1506, #1b0c03);
     --card-gold: linear-gradient(145deg, #3a1e08, #2a1506);
+    --card-blue: linear-gradient(145deg, #1a2a3a, #0f1a26);
     --text: #f5edd6;
     --text-muted: #bda282;
     --green: #2ecc71;
     --shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
     --shadow-gold: 0 8px 30px rgba(245, 200, 66, 0.1);
+    --shadow-blue: 0 8px 30px rgba(52, 152, 219, 0.15);
     --font: 'Vazirmatn Local', 'Vazirmatn', Tahoma, sans-serif;
   }
 
@@ -64,13 +69,20 @@
     overflow-x: hidden;
     background-image:
       radial-gradient(ellipse at 15% 15%, rgba(139, 26, 26, 0.13) 0%, transparent 55%),
-      radial-gradient(ellipse at 85% 85%, rgba(197, 148, 26, 0.1) 0%, transparent 55%);
+      radial-gradient(ellipse at 85% 85%, rgba(197, 148, 26, 0.1) 0%, transparent 55%),
+      radial-gradient(ellipse at 50% 50%, rgba(52, 152, 219, 0.05) 0%, transparent 60%);
     background-attachment: fixed;
     line-height: 1.75;
     font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    animation: bgShift 30s ease-in-out infinite alternate;
+  }
+
+  @keyframes bgShift {
+    0% { background-position: 0 0, 0 0, 50% 50%; }
+    100% { background-position: 20px 20px, -20px -20px, 50% 50%; }
   }
 
   .container {
@@ -79,24 +91,58 @@
     padding: 20px 16px 32px;
   }
 
+  /* ===== ستاره‌های تزئینی ===== */
+  .stars-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: #fff;
+    border-radius: 50%;
+    opacity: 0;
+    animation: twinkle 4s ease-in-out infinite;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: 0.7; transform: scale(1.4); }
+  }
+
   /* ===== هدر ===== */
   .header {
     text-align: center;
     padding: 24px 12px 20px;
     margin-bottom: 18px;
+    position: relative;
+    z-index: 1;
   }
 
   .header-emblem {
-    font-size: 3.2rem;
+    font-size: 3.4rem;
     line-height: 1;
     margin-bottom: 8px;
     display: inline-block;
+    animation: floatEmblem 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px rgba(245, 200, 66, 0.4));
+  }
+
+  @keyframes floatEmblem {
+    0%, 100% { transform: translateY(0) rotate(-3deg); }
+    50% { transform: translateY(-8px) rotate(3deg); }
   }
 
   .header-title {
     font-size: clamp(2rem, 7vw, 2.5rem);
     font-weight: 900;
-    background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
+    background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark), var(--gold), var(--gold-light));
+    background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -104,6 +150,12 @@
     margin-bottom: 4px;
     letter-spacing: 1px;
     line-height: 1.3;
+    animation: goldShimmer 5s linear infinite;
+  }
+
+  @keyframes goldShimmer {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
   }
 
   .header-slogan {
@@ -118,6 +170,12 @@
     color: var(--gold);
     margin: 0 6px;
     opacity: 0.7;
+    animation: dividerPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes dividerPulse {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.3); }
   }
 
   /* ===== کارت حکیم ===== */
@@ -131,6 +189,30 @@
     align-items: center;
     gap: 14px;
     box-shadow: var(--shadow-gold);
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    transition: box-shadow 0.4s ease;
+  }
+
+  .hakim-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(245, 200, 66, 0.08), transparent);
+    transition: left 0.8s ease;
+    pointer-events: none;
+  }
+
+  .hakim-card:hover::before {
+    left: 100%;
+  }
+
+  .hakim-card:hover {
+    box-shadow: 0 8px 30px rgba(245, 200, 66, 0.25);
   }
 
   .hakim-avatar {
@@ -143,8 +225,13 @@
     align-items: center;
     justify-content: center;
     border: 2.5px solid rgba(255, 245, 200, 0.55);
-    box-shadow: 0 0 18px rgba(245, 200, 66, 0.4);
+    box-shadow: 0 0 18px rgba(245, 200, 66, 0.4), inset 0 -3px 8px rgba(0,0,0,0.3);
     overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  .hakim-card:hover .hakim-avatar {
+    transform: scale(1.08) rotate(-5deg);
   }
 
   .hakim-avatar svg {
@@ -211,6 +298,8 @@
     align-items: center;
     gap: 8px;
     letter-spacing: 0.3px;
+    position: relative;
+    z-index: 1;
   }
 
   .section-title .icon {
@@ -242,6 +331,7 @@
     color: inherit;
     position: relative;
     overflow: hidden;
+    z-index: 1;
   }
 
   .game-card::before {
@@ -282,6 +372,11 @@
     justify-content: center;
     font-size: 1.9rem;
     box-shadow: 0 3px 12px rgba(245, 200, 66, 0.15);
+    transition: transform 0.3s ease;
+  }
+
+  .game-card:hover .game-icon {
+    transform: scale(1.08) rotate(-6deg);
   }
 
   .game-headline {
@@ -397,6 +492,54 @@
     transform: translateX(-5px) scale(1.08);
   }
 
+  /* ===== کارت ابزار معلم (آبی) ===== */
+  .tool-card {
+    background: var(--card-blue);
+    border-color: rgba(52, 152, 219, 0.5);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 25px rgba(52, 152, 219, 0.08);
+  }
+
+  .tool-card::before {
+    background: linear-gradient(90deg, transparent, var(--blue), transparent);
+    opacity: 0.85;
+  }
+
+  .tool-card:hover,
+  .tool-card:focus-visible {
+    border-color: var(--blue);
+    box-shadow: 0 14px 40px rgba(52, 152, 219, 0.3);
+  }
+
+  .tool-card .game-icon {
+    background: linear-gradient(145deg, rgba(52, 152, 219, 0.2), rgba(41, 128, 185, 0.1));
+    border-color: rgba(52, 152, 219, 0.55);
+    box-shadow: 0 3px 12px rgba(52, 152, 219, 0.2);
+  }
+
+  .tool-card .game-name {
+    color: #d6ecff;
+  }
+
+  .tool-card .game-tag {
+    color: var(--blue-light);
+    background: rgba(52, 152, 219, 0.12);
+    border-color: rgba(52, 152, 219, 0.35);
+  }
+
+  .tool-card .game-cta {
+    border-top-color: rgba(52, 152, 219, 0.2);
+  }
+
+  .tool-card .game-arrow {
+    background: linear-gradient(135deg, var(--blue-dark), var(--blue));
+    color: #fff;
+    box-shadow: 0 3px 10px rgba(52, 152, 219, 0.4);
+  }
+
+  .tool-card .game-cta-text {
+    color: #d6ecff;
+  }
+
   /* ===== بخش اطلاعات ===== */
   .info-box {
     background: var(--card);
@@ -406,6 +549,7 @@
     margin-bottom: 20px;
     box-shadow: var(--shadow);
     position: relative;
+    z-index: 1;
   }
 
   .info-box::before {
@@ -477,7 +621,68 @@
 
   @keyframes heartBeat {
     0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.12); }
+    50% { transform: scale(1.15); }
+  }
+
+  /* ===== دکمه‌ی موسیقی ===== */
+  .music-btn {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 1000;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #2a1506, #1b0c03);
+    border: 2px solid rgba(245, 200, 66, 0.5);
+    color: var(--gold);
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 20px rgba(245, 200, 66, 0.15);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .music-btn:hover {
+    transform: scale(1.08);
+    border-color: var(--gold);
+    box-shadow: 0 4px 20px rgba(245, 200, 66, 0.4);
+  }
+
+  .music-btn:active {
+    transform: scale(0.95);
+  }
+
+  .music-btn.playing {
+    animation: musicPulse 1.5s ease-in-out infinite;
+    border-color: var(--gold-light);
+  }
+
+  @keyframes musicPulse {
+    0%, 100% {
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 20px rgba(245, 200, 66, 0.2);
+    }
+    50% {
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 30px rgba(245, 200, 66, 0.6);
+    }
+  }
+
+  .music-btn.playing .music-icon {
+    animation: musicSpin 3s linear infinite;
+  }
+
+  @keyframes musicSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .music-icon {
+    display: inline-block;
+    line-height: 1;
   }
 
   /* ===== واکنش‌گرا ===== */
@@ -529,6 +734,14 @@
     .step-mini .arrow {
       display: none;
     }
+
+    .music-btn {
+      top: 12px;
+      left: 12px;
+      width: 42px;
+      height: 42px;
+      font-size: 1.15rem;
+    }
   }
 
   @media (max-width: 340px) {
@@ -566,6 +779,15 @@
 </style>
 </head>
 <body>
+
+<!-- ===== پس‌زمینه‌ی ستاره‌ای ===== -->
+<div class="stars-bg" id="starsBg" aria-hidden="true"></div>
+
+<!-- ===== دکمه‌ی موسیقی ===== -->
+<button type="button" class="music-btn" id="musicBtn" aria-label="روشن یا خاموش کردن موسیقی پس‌زمینه" title="موسیقی پس‌زمینه">
+  <span class="music-icon" id="musicIcon">🔇</span>
+</button>
+<audio id="lobbyMusic" src="lobby-music.mp3" loop preload="auto"></audio>
 
 <div class="container">
 
@@ -659,6 +881,51 @@
     </div>
   </a>
 
+  <!-- ===== ابزارهای معلم ===== -->
+  <h2 class="section-title">
+    <span class="icon" aria-hidden="true">🧑‍🏫</span>
+    <span>ابزارهای معلم</span>
+    <span class="line" aria-hidden="true"></span>
+  </h2>
+
+  <a href="azmoon-saz.html" class="game-card tool-card" aria-label="ورود به آزمون‌ساز حکیمستان">
+    <div class="game-top">
+      <div class="game-icon" aria-hidden="true">📝</div>
+      <div class="game-headline">
+        <div class="game-name">آزمون‌ساز حکیمستان</div>
+        <p class="game-desc">ساخت آزمون، برگه‌ی چاپی و آزمون آنلاین — ساده، سریع، آفلاین.</p>
+      </div>
+    </div>
+
+    <div class="game-meta">
+      <span class="game-tag">📚 ۸ نوع سوال</span>
+      <span class="game-tag">🖨️ خروجی Word و PDF</span>
+      <span class="game-tag">🎮 آزمون آنلاین</span>
+    </div>
+
+    <div class="game-steps" aria-label="راهنمای استفاده">
+      <div class="step-mini">
+        <span class="num">۱</span>
+        <span>سوال بساز</span>
+      </div>
+      <span class="arrow" aria-hidden="true">←</span>
+      <div class="step-mini">
+        <span class="num">۲</span>
+        <span>قالب انتخاب کن</span>
+      </div>
+      <span class="arrow" aria-hidden="true">←</span>
+      <div class="step-mini">
+        <span class="num">۳</span>
+        <span>خروجی بگیر</span>
+      </div>
+    </div>
+
+    <div class="game-cta">
+      <span class="game-cta-text">آماده‌ی ساخت آزمونی؟</span>
+      <span class="game-arrow" aria-hidden="true">←</span>
+    </div>
+  </a>
+
   <!-- ===== درباره حکیم ===== -->
   <h2 class="section-title">
     <span class="icon" aria-hidden="true">📖</span>
@@ -686,27 +953,145 @@
   (function () {
     'use strict';
 
+    /* ===== پیام‌های چرخشی حکیم ===== */
     const messages = [
       'سلام! من حکیمم، راهنمای تو در سرزمین یادگیری.',
       'کدام بازی را امروز آغاز می‌کنی؟',
       'دانش، بهترین گنج جهان است. آماده‌ای برای کاوش؟',
       'هر پرسش، یک گام به پیش است. بیا شروع کنیم!',
+      'معلم عزیز، آزمون‌ساز در خدمت شماست! 📝',
       'حکیمستان، خانه‌ی همه‌ی دانش‌آموزان کوشا.'
     ];
 
     let index = 0;
     const textEl = document.getElementById('hakimText');
 
-    if (!textEl) return;
+    if (textEl) {
+      setInterval(function () {
+        index = (index + 1) % messages.length;
+        textEl.style.opacity = '0';
+        setTimeout(function () {
+          textEl.textContent = messages[index];
+          textEl.style.opacity = '1';
+        }, 350);
+      }, 6000);
+    }
 
-    setInterval(function () {
-      index = (index + 1) % messages.length;
-      textEl.style.opacity = '0';
-      setTimeout(function () {
-        textEl.textContent = messages[index];
-        textEl.style.opacity = '1';
-      }, 350);
-    }, 6000);
+    /* ===== ستاره‌های تزئینی ===== */
+    const starsBg = document.getElementById('starsBg');
+    if (starsBg) {
+      for (let i = 0; i < 30; i++) {
+        const s = document.createElement('div');
+        s.className = 'star';
+        s.style.left = Math.random() * 100 + '%';
+        s.style.top = Math.random() * 100 + '%';
+        s.style.animationDelay = (Math.random() * 4) + 's';
+        s.style.animationDuration = (3 + Math.random() * 3) + 's';
+        if (Math.random() > 0.7) s.style.background = '#f5c842';
+        starsBg.appendChild(s);
+      }
+    }
+
+    /* ===== موسیقی لابی ===== */
+    const musicBtn = document.getElementById('musicBtn');
+    const musicIcon = document.getElementById('musicIcon');
+    const bgMusic = document.getElementById('lobbyMusic');
+    const MUSIC_KEY = 'hakimestan_lobby_music';
+
+    // بازیابی وضعیت قبلی (روشن/خاموش)
+    let musicWanted = true; // پیش‌فرض روشن
+    try {
+      const saved = localStorage.getItem(MUSIC_KEY);
+      if (saved === 'off') musicWanted = false;
+    } catch (e) {}
+
+    function updateMusicUI(isPlaying) {
+      if (isPlaying) {
+        musicIcon.textContent = '🎵';
+        musicBtn.classList.add('playing');
+        musicBtn.setAttribute('aria-label', 'خاموش کردن موسیقی پس‌زمینه');
+      } else {
+        musicIcon.textContent = '🔇';
+        musicBtn.classList.remove('playing');
+        musicBtn.setAttribute('aria-label', 'روشن کردن موسیقی پس‌زمینه');
+      }
+    }
+
+    function tryPlayMusic() {
+      if (!bgMusic || !musicWanted) return;
+      bgMusic.volume = 0.35;
+      const playPromise = bgMusic.play();
+      if (playPromise && typeof playPromise.then === 'function') {
+        playPromise.then(function () {
+          updateMusicUI(true);
+        }).catch(function () {
+          // Autoplay مسدود شده — منتظر اولین کلیک کاربر می‌مونیم
+          updateMusicUI(false);
+        });
+      }
+    }
+
+    function toggleMusic() {
+      if (!bgMusic) return;
+      if (bgMusic.paused) {
+        musicWanted = true;
+        try { localStorage.setItem(MUSIC_KEY, 'on'); } catch (e) {}
+        bgMusic.play().then(function () {
+          updateMusicUI(true);
+        }).catch(function () {
+          updateMusicUI(false);
+        });
+      } else {
+        musicWanted = false;
+        try { localStorage.setItem(MUSIC_KEY, 'off'); } catch (e) {}
+        bgMusic.pause();
+        updateMusicUI(false);
+      }
+    }
+
+    if (musicBtn && bgMusic) {
+      musicBtn.addEventListener('click', toggleMusic);
+
+      // اگه کاربر قبلاً موسیقی رو خاموش کرده بود، همون حالت بمونه
+      if (!musicWanted) {
+        updateMusicUI(false);
+      } else {
+        // تلاش اول (ممکنه مرورگر مسدود کنه)
+        tryPlayMusic();
+
+        // در اولین تعامل کاربر، موسیقی رو پخش کن
+        const autoStart = function () {
+          if (musicWanted && bgMusic.paused) {
+            tryPlayMusic();
+          }
+          document.removeEventListener('click', autoStart);
+          document.removeEventListener('touchstart', autoStart);
+          document.removeEventListener('keydown', autoStart);
+        };
+        document.addEventListener('click', autoStart, { once: false });
+        document.addEventListener('touchstart', autoStart, { once: false, passive: true });
+        document.addEventListener('keydown', autoStart, { once: false });
+      }
+    }
+
+    /* ===== ذخیره‌ی صدا وقتی کاربر به تب دیگه می‌ره ===== */
+    let wasPlayingBeforeHide = false;
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) {
+        if (bgMusic && !bgMusic.paused) {
+          wasPlayingBeforeHide = true;
+          bgMusic.pause();
+        }
+      } else {
+        if (wasPlayingBeforeHide && musicWanted && bgMusic) {
+          bgMusic.play().then(function () {
+            updateMusicUI(true);
+          }).catch(function () {});
+          wasPlayingBeforeHide = false;
+        }
+      }
+    });
+
   })();
 </script>
 
