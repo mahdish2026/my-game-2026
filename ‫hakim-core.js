@@ -1,26 +1,28 @@
 /*!
  * hakim-core.js — هسته‌ی شخصیت حکیم برای پروژه‌ی حکیمستان
- * نسخه: 1.0.0
+ * نسخه: 2.0.0 (Universal)
  * ساخته مهدی شریفیان
  *
- * استفاده:
- *   <div id="hakim-container"></div>
- *   <script src="hakim-core.js"></script>
- *   <script>
- *     Hakim.init({ container: '#hakim-container', name: 'علی' });
- *     Hakim.say('سلام! خوش آمدی.');
- *   </script>
+ * سه حالت استفاده:
+ *  1) پنل در HTML هست → خودش پیدا می‌کنه
+ *     <div class="hakim-panel">...</div>
+ *     Hakim.init();
+ *
+ *  2) یه کانتینر می‌دی، پنل رو داخلش می‌سازه
+ *     <div id="hakim-container"></div>
+ *     Hakim.init({ container: '#hakim-container' });
+ *
+ *  3) هیچی نمی‌دی → پنل رو به بالای body اضافه می‌کنه
+ *     Hakim.init();
  */
 (function (global) {
   'use strict';
 
   // ============================================================
-  // 🎨 SVG چهره‌های حکیم (۹ حالت)
+  // 🎨 ۹ SVG چهره‌ی حکیم
   // ============================================================
   const HAKIM_FACES = {
-    calm: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <defs><radialGradient id="hkSkinC" cx="40%" cy="35%"><stop offset="0%" stop-color="#fce4c4"/><stop offset="100%" stop-color="#d9a878"/></radialGradient></defs>
-      <path d="M20,32 Q50,12 80,32 Q80,44 74,46 L26,46 Q20,44 20,32 Z" fill="#7a4420"/><path d="M20,32 Q50,12 80,32" stroke="#a0662c" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="50" cy="20" r="3.5" fill="#a0662c"/><ellipse cx="50" cy="58" rx="26" ry="26" fill="url(#hkSkinC)"/><ellipse cx="24" cy="58" rx="3" ry="5" fill="#d9a878"/><ellipse cx="76" cy="58" rx="3" ry="5" fill="#d9a878"/><path d="M30,70 Q28,90 50,92 Q72,90 70,70 Q66,82 50,84 Q34,82 30,70 Z" fill="#f0f0f0" opacity=".94"/><path d="M38,58 Q42,55 46,58" stroke="#2a1a0a" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M54,58 Q58,55 62,58" stroke="#2a1a0a" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M36,51 Q42,49 46,51" stroke="#3a2510" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M54,51 Q58,49 64,51" stroke="#3a2510" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M48,62 L46,68 Q50,69 54,68 L52,62 Z" fill="#c89868"/><path d="M44,74 Q50,77 56,74" stroke="#3a2510" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
+    calm: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="hkSkinC" cx="40%" cy="35%"><stop offset="0%" stop-color="#fce4c4"/><stop offset="100%" stop-color="#d9a878"/></radialGradient></defs><path d="M20,32 Q50,12 80,32 Q80,44 74,46 L26,46 Q20,44 20,32 Z" fill="#7a4420"/><path d="M20,32 Q50,12 80,32" stroke="#a0662c" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="50" cy="20" r="3.5" fill="#a0662c"/><ellipse cx="50" cy="58" rx="26" ry="26" fill="url(#hkSkinC)"/><ellipse cx="24" cy="58" rx="3" ry="5" fill="#d9a878"/><ellipse cx="76" cy="58" rx="3" ry="5" fill="#d9a878"/><path d="M30,70 Q28,90 50,92 Q72,90 70,70 Q66,82 50,84 Q34,82 30,70 Z" fill="#f0f0f0" opacity=".94"/><path d="M38,58 Q42,55 46,58" stroke="#2a1a0a" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M54,58 Q58,55 62,58" stroke="#2a1a0a" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M36,51 Q42,49 46,51" stroke="#3a2510" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M54,51 Q58,49 64,51" stroke="#3a2510" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M48,62 L46,68 Q50,69 54,68 L52,62 Z" fill="#c89868"/><path d="M44,74 Q50,77 56,74" stroke="#3a2510" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
 
     happy: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="hkSkinH" cx="40%" cy="35%"><stop offset="0%" stop-color="#fce4c4"/><stop offset="100%" stop-color="#d9a878"/></radialGradient></defs><path d="M20,32 Q50,12 80,32 Q80,44 74,46 L26,46 Q20,44 20,32 Z" fill="#7a4420"/><path d="M20,32 Q50,12 80,32" stroke="#a0662c" stroke-width="2.5" fill="none" stroke-linecap="round"/><circle cx="50" cy="20" r="3.5" fill="#a0662c"/><ellipse cx="50" cy="58" rx="26" ry="26" fill="url(#hkSkinH)"/><ellipse cx="24" cy="58" rx="3" ry="5" fill="#d9a878"/><ellipse cx="76" cy="58" rx="3" ry="5" fill="#d9a878"/><path d="M30,70 Q28,90 50,92 Q72,90 70,70 Q66,82 50,84 Q34,82 30,70 Z" fill="#f0f0f0" opacity=".94"/><path d="M37,58 Q42,52 47,58" stroke="#2a1a0a" stroke-width="2.8" fill="none" stroke-linecap="round"/><path d="M53,58 Q58,52 63,58" stroke="#2a1a0a" stroke-width="2.8" fill="none" stroke-linecap="round"/><path d="M34,48 Q42,44 47,48" stroke="#3a2510" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M53,48 Q58,44 66,48" stroke="#3a2510" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M48,62 L46,68 Q50,69 54,68 L52,62 Z" fill="#c89868"/><path d="M42,72 Q50,80 58,72" stroke="#3a2510" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg>`,
 
@@ -40,17 +42,16 @@
   };
 
   // ============================================================
-  // 🎭 نقشه ایموجی → حالت چهره
+  // 🎭 ایموجی → حالت
   // ============================================================
   const EMOJI_TO_MOOD = {
-    '🧙‍♂️': 'calm', '🤩': 'amazed', '😎': 'amazed', '😊': 'happy',
-    '🤔': 'thinking', '⏳': 'concerned', '💪': 'happy', '👑': 'proud',
-    '🏆': 'proud', '💔': 'concerned', '📚': 'thinking', '😅': 'concerned',
-    '👂': 'listening', '🎉': 'celebrating', '❓': 'curious'
+    '🧙‍♂️':'calm','🤩':'amazed','😎':'amazed','😊':'happy','🤔':'thinking',
+    '⏳':'concerned','💪':'happy','👑':'proud','🏆':'proud','💔':'concerned',
+    '📚':'thinking','😅':'concerned','👂':'listening','🎉':'celebrating','❓':'curious'
   };
 
   // ============================================================
-  // 💬 بانک پیام‌های تشویقی
+  // 💬 پیام‌ها
   // ============================================================
   const HAKIM_PHRASES = {
     intro: [
@@ -98,8 +99,8 @@
       '👑 بی‌نظیر! پنج پاسخ درست پشت سر هم! عالیه!'
     ],
     weakLesson: {
-      18: 'می‌بینم که درس ۱۸ کمی اذیتت می‌کنه. قیام سیاه‌جامگان و حکومت‌های ایرانی مثل سامانیان. حواست به خواجه‌ها و شاعرانشون باشه.',
-      19: 'درس ۱۹ رو کم‌کم از دست می‌دی {name}. سلجوقیان، وزیران کاردان مثل خواجه نظام‌الملک. مدرسه‌های نظامیه رو یادت هست؟',
+      18: 'می‌بینم که درس ۱۸ کمی اذیتت می‌کنه. قیام سیاه‌جامگان و حکومت‌های ایرانی مثل سامانیان.',
+      19: 'درس ۱۹ رو کم‌کم از دست می‌دی {name}. سلجوقیان، وزیران کاردان مثل خواجه نظام‌الملک.',
       20: 'درس ۲۰ تلخه، می‌دونم. حمله مغول و تیمور. حواست به تفاوت چنگیز و هلاکو باشه.',
       21: 'درس ۲۱ امیدوارکننده‌ست {name}: بازسازی. خواجه نصیر و رشیدالدین اینجا نقش دارن.'
     },
@@ -136,13 +137,22 @@
     if (!m) return null;
     return parseInt(toEnglishNum(m[1]), 10) || null;
   }
+  function createProfile() {
+    return {
+      lesson: { 18:{c:0,w:0}, 19:{c:0,w:0}, 20:{c:0,w:0}, 21:{c:0,w:0} },
+      consecutiveCorrect: 0, consecutiveWrong: 0,
+      maxConsecutiveCorrect: 0, maxConsecutiveWrong: 0,
+      recovered: 0, lastWasWrong: false,
+      fastWins: 0, slowCorrects: 0,
+      weakLessonWarned: {}, _shownRecovery: false
+    };
+  }
 
   // ============================================================
-  // 🎨 تزریق CSS (یک‌بار)
+  // 🎨 CSS
   // ============================================================
-  let stylesInjected = false;
   function injectStyles() {
-    if (stylesInjected) return;
+    if (document.getElementById('hakim-core-styles')) return;
     const style = document.createElement('style');
     style.id = 'hakim-core-styles';
     style.textContent = `
@@ -166,11 +176,10 @@
       .hakim-text{font-size:.92rem;color:#f5edd6;line-height:1.8;text-align:right;min-height:1.5em;font-weight:500}
       .hakim-text.typing::after{content:'▍';animation:hakimCursor .7s infinite;color:#f5c842;margin-right:2px}
       @keyframes hakimCursor{50%{opacity:0}}
-      .hakim-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+      .hakim-sr-only,.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
       body[data-theme="dark"] .hakim-panel{background:linear-gradient(145deg,rgba(15,28,50,.85),rgba(5,12,24,.85));border-color:rgba(160,200,255,.25)}
       body[data-theme="dawn"] .hakim-panel{background:linear-gradient(145deg,rgba(55,21,61,.85),rgba(28,6,32,.85));border-color:rgba(255,157,108,.28)}
       body[data-theme="flag"] .hakim-panel{background:linear-gradient(145deg,rgba(13,38,24,.85),rgba(5,18,10,.85));border-color:rgba(46,204,113,.3)}
-      /* کارنامه حکیم */
       .hakim-report-line{font-size:.85rem;color:#f5edd6;line-height:1.9;padding:12px 14px;background:rgba(245,200,66,.06);border-radius:12px;border-right:3px solid #c9941a;margin-bottom:12px;text-align:right;font-weight:600}
       .hakim-lesson-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
       .hakim-lesson-item{padding:10px 12px;background:rgba(0,0,0,.25);border:1px solid rgba(245,200,66,.15);border-radius:12px}
@@ -181,55 +190,38 @@
       .hakim-report-sign{text-align:center;font-size:.7rem;color:#f5c842;font-weight:700;letter-spacing:1px;margin-top:16px;padding-top:12px;border-top:1px dashed rgba(245,200,66,.25)}
     `;
     document.head.appendChild(style);
-    stylesInjected = true;
   }
 
   // ============================================================
-  // 🧠 پروفایل (state داخلی برای ردگیری)
-  // ============================================================
-  function createProfile() {
-    return {
-      lesson: { 18: {c:0,w:0}, 19: {c:0,w:0}, 20: {c:0,w:0}, 21: {c:0,w:0} },
-      consecutiveCorrect: 0,
-      consecutiveWrong: 0,
-      maxConsecutiveCorrect: 0,
-      maxConsecutiveWrong: 0,
-      recovered: 0,
-      lastWasWrong: false,
-      fastWins: 0,
-      slowCorrects: 0,
-      weakLessonWarned: {},
-      _shownRecovery: false
-    };
-  }
-
-  // ============================================================
-  // 🧙‍♂️ state اصلی
+  // 🧠 state
   // ============================================================
   const state = {
-    container: null,
-    panelEl: null,
-    faceEl: null,
-    textEl: null,
-    srEl: null,
-    typeTimer: null,
-    hideTimer: null,
-    name: 'دوست من',
-    mood: 'calm',
-    profile: null,
-    onWeakLesson: null,
-    initialized: false
+    panelEl:null, faceEl:null, textEl:null, srEl:null,
+    typeTimer:null, hideTimer:null,
+    name:'دوست من', mood:'calm',
+    autoHideMs: 4200,
+    initialized:false
   };
 
-  function ensureProfile() {
-    if (!state.profile) state.profile = createProfile();
+  // ============================================================
+  // 🔍 پیدا کردن یا ساخت پنل
+  // ============================================================
+  function findExistingPanel(containerOption) {
+    if (containerOption) {
+      const container = typeof containerOption === 'string'
+        ? document.querySelector(containerOption)
+        : containerOption;
+      if (container) {
+        if (container.classList && container.classList.contains('hakim-panel')) return container;
+        const inside = container.querySelector && container.querySelector('.hakim-panel');
+        if (inside) return inside;
+      }
+    }
+    return document.querySelector('.hakim-panel') || document.getElementById('hakimPanel');
   }
 
-  // ============================================================
-  // 🏗️ ساخت پنل
-  // ============================================================
-  function buildPanel(container) {
-    container.innerHTML = `
+  function buildPanelHTML() {
+    return `
       <div class="hakim-panel" id="hakimPanel">
         <div class="hakim-avatar">
           <div class="hakim-glow" aria-hidden="true"></div>
@@ -240,37 +232,49 @@
           <div class="hakim-text" id="hakimText" aria-hidden="true"></div>
           <div class="hakim-sr-only" id="hakimSrText" role="status" aria-live="polite"></div>
         </div>
-      </div>
-    `;
-    state.panelEl = container.querySelector('.hakim-panel');
-    state.faceEl = container.querySelector('.hakim-face');
-    state.textEl = container.querySelector('.hakim-text');
-    state.srEl = container.querySelector('#hakimSrText');
-    setMood('calm');
+      </div>`;
+  }
+
+  function bindPanelEls(panelEl) {
+    state.panelEl = panelEl;
+    state.faceEl = panelEl.querySelector('.hakim-face') || panelEl.querySelector('#hakimFace');
+    state.textEl = panelEl.querySelector('.hakim-text') || panelEl.querySelector('#hakimText');
+    state.srEl   = panelEl.querySelector('.hakim-srText') || panelEl.querySelector('#hakimSrText') || panelEl.querySelector('.hakim-sr-only');
   }
 
   // ============================================================
-  // 🎨 API عمومی
+  // 🎯 API اصلی
   // ============================================================
   function init(options) {
     options = options || {};
     injectStyles();
-
     if (options.name) state.name = String(options.name);
-    if (typeof options.onWeakLesson === 'function') state.onWeakLesson = options.onWeakLesson;
+    if (typeof options.autoHideMs === 'number') state.autoHideMs = options.autoHideMs;
 
-    const container = typeof options.container === 'string'
-      ? document.querySelector(options.container)
-      : options.container;
+    let panelEl = findExistingPanel(options.container);
 
-    if (!container) {
-      console.warn('[Hakim] container not found:', options.container);
-      return api;
+    // اگه پنل پیدا نشد و کانتینر داده شده → داخلش بساز
+    if (!panelEl && options.container) {
+      const container = typeof options.container === 'string'
+        ? document.querySelector(options.container)
+        : options.container;
+      if (container) {
+        container.insertAdjacentHTML('beforeend', buildPanelHTML());
+        panelEl = container.querySelector('.hakim-panel');
+      }
     }
 
-    state.container = container;
-    buildPanel(container);
-    ensureProfile();
+    // اگه هنوز نه → بالای body اضافه کن
+    if (!panelEl) {
+      const wrapper = document.createElement('div');
+      wrapper.style.cssText = 'max-width:750px;margin:12px auto 0;padding:0 14px;';
+      wrapper.innerHTML = buildPanelHTML();
+      document.body.insertBefore(wrapper, document.body.firstChild);
+      panelEl = wrapper.querySelector('.hakim-panel');
+    }
+
+    bindPanelEls(panelEl);
+    setMood('calm');
     state.initialized = true;
     return api;
   }
@@ -298,10 +302,7 @@
 
   function say(text, opts) {
     opts = opts || {};
-    if (!state.panelEl || !state.textEl) {
-      console.warn('[Hakim] not initialized. Call Hakim.init() first.');
-      return;
-    }
+    if (!state.panelEl || !state.textEl) return;
     const msg = String(text || '');
     if (!msg) return;
 
@@ -309,8 +310,7 @@
     if (!mood && opts.emoji) mood = EMOJI_TO_MOOD[opts.emoji] || 'calm';
     if (mood) setMood(mood);
 
-    state.panelEl.classList.add('active');
-    state.panelEl.classList.add('speaking');
+    state.panelEl.classList.add('active','speaking');
     state.textEl.textContent = '';
     state.textEl.classList.add('typing');
     if (state.srEl) state.srEl.textContent = '';
@@ -334,7 +334,7 @@
 
     const autoHide = opts.autoHide !== false && !opts.permanent;
     if (autoHide) {
-      const total = msg.length * speed + 4200;
+      const total = msg.length * speed + state.autoHideMs;
       state.hideTimer = setTimeout(() => {
         state.panelEl.classList.remove('active');
         setMood('calm');
@@ -344,12 +344,8 @@
 
   function sayRandom(category, vars, opts) {
     const arr = HAKIM_PHRASES[category];
-    if (!arr) {
-      console.warn('[Hakim] unknown phrase category:', category);
-      return;
-    }
-    const phrase = pickPhrase(arr);
-    const msg = fillTemplate(phrase, vars || { name: state.name });
+    if (!arr) return;
+    const msg = fillTemplate(pickPhrase(arr), vars || { name: state.name });
     say(msg, opts);
   }
 
@@ -360,23 +356,21 @@
     clearTimeout(state.hideTimer);
     if (state.textEl) state.textEl.textContent = '';
     if (state.srEl) state.srEl.textContent = '';
-    if (state.panelEl) state.panelEl.classList.remove('active', 'speaking');
+    if (state.panelEl) state.panelEl.classList.remove('active','speaking');
     setMood('calm');
-    state.profile = createProfile();
   }
-
   function setName(name) { state.name = String(name || 'دوست من'); }
   function getName() { return state.name; }
+  function isReady() { return state.initialized; }
 
   // ============================================================
-  // 📊 ردگیری و واکنش
+  // 📊 track / react
   // ============================================================
-  function track(correct, timeUsed, lesson) {
-    ensureProfile();
-    const p = state.profile;
+  function track(profile, correct, timeUsed, lesson) {
+    if (!profile || !profile.lesson) return;
+    const p = profile;
     if (lesson && p.lesson[lesson]) {
-      if (correct) p.lesson[lesson].c++;
-      else p.lesson[lesson].w++;
+      if (correct) p.lesson[lesson].c++; else p.lesson[lesson].w++;
     }
     if (correct) {
       p.consecutiveCorrect++;
@@ -390,181 +384,122 @@
       p.consecutiveCorrect = 0;
       if (p.consecutiveWrong > p.maxConsecutiveWrong) p.maxConsecutiveWrong = p.consecutiveWrong;
       p.lastWasWrong = true;
-
-      if (lesson && p.lesson[lesson] && p.lesson[lesson].w >= 2) {
-        if (typeof state.onWeakLesson === 'function') {
-          state.onWeakLesson(lesson);
-        }
-      }
     }
   }
 
-  function react(correct, timeUsed, lesson, wasTimeout) {
-    ensureProfile();
-    const p = state.profile;
+  function react(profile, correct, timeUsed, lesson, wasTimeout) {
+    if (!profile) return;
+    const p = profile;
     const name = state.name;
 
     if (correct) {
-      if (p.consecutiveCorrect === 3) {
-        sayRandom('streak3', { name }, { emoji: '🤩' });
-      } else if (p.consecutiveCorrect === 5) {
-        sayRandom('streak5', { name }, { emoji: '👑' });
-      } else if (p.recovered > 0 && p.recovered <= 2 && !p._shownRecovery) {
-        sayRandom('recovery', { name }, { emoji: '💪' });
+      if (p.consecutiveCorrect === 3) sayRandom('streak3', { name }, { emoji:'🤩' });
+      else if (p.consecutiveCorrect === 5) sayRandom('streak5', { name }, { emoji:'👑' });
+      else if (p.recovered > 0 && p.recovered <= 2 && !p._shownRecovery) {
+        sayRandom('recovery', { name }, { emoji:'💪' });
         p._shownRecovery = true;
-      } else if (timeUsed <= 5) {
-        sayRandom('correctFast', { name, t: toEnglishNum(timeUsed) }, { emoji: '😎' });
-      } else if (timeUsed >= 10) {
-        sayRandom('correctSlow', { name }, { emoji: '🤔' });
-      } else {
-        sayRandom('correctMedium', { name }, { emoji: '😊' });
       }
+      else if (timeUsed <= 5) sayRandom('correctFast', { name, t: toEnglishNum(timeUsed) }, { emoji:'😎' });
+      else if (timeUsed >= 10) sayRandom('correctSlow', { name }, { emoji:'🤔' });
+      else sayRandom('correctMedium', { name }, { emoji:'😊' });
     } else {
-      if (wasTimeout) {
-        sayRandom('timeout', { name }, { emoji: '⏳' });
-      } else if (timeUsed <= 4) {
-        sayRandom('wrongFast', { name }, { emoji: '😅' });
-      } else {
-        sayRandom('wrong', { name }, { emoji: '🤔' });
-      }
+      if (wasTimeout) sayRandom('timeout', { name }, { emoji:'⏳' });
+      else if (timeUsed <= 4) sayRandom('wrongFast', { name }, { emoji:'😅' });
+      else sayRandom('wrong', { name }, { emoji:'🤔' });
 
       if (lesson && p.lesson[lesson] && p.lesson[lesson].w >= 2 && !p.weakLessonWarned[lesson]) {
         p.weakLessonWarned[lesson] = true;
         const hint = HAKIM_PHRASES.weakLesson[lesson];
-        if (hint) {
-          setTimeout(() => {
-            say(fillTemplate(hint, { name }), { emoji: '📚' });
-          }, 3200);
-        }
+        if (hint) setTimeout(() => say(fillTemplate(hint, { name }), { emoji:'📚' }), 3200);
       }
     }
   }
 
   function onCityConquered(cityName, isPerfect) {
     const name = state.name;
-    if (isPerfect) {
-      sayRandom('perfectCity', { city: cityName, name }, { emoji: '👑' });
-    } else {
-      sayRandom('cityConquered', { city: cityName, name }, { emoji: '🏆' });
-    }
+    if (isPerfect) sayRandom('perfectCity', { city: cityName, name }, { emoji:'👑' });
+    else sayRandom('cityConquered', { city: cityName, name }, { emoji:'🏆' });
   }
 
   function onLowHearts(hearts) {
-    sayRandom('lowHearts', { name: state.name, h: toEnglishNum(hearts) }, { emoji: '💔' });
+    sayRandom('lowHearts', { name: state.name, h: toEnglishNum(hearts) }, { emoji:'💔' });
   }
 
-  function getProfile() { ensureProfile(); return state.profile; }
-
   // ============================================================
-  // 📜 کارنامه‌ی حکیم
+  // 📜 گزارش
   // ============================================================
-  function buildReport(options) {
+  function buildReport(profile, options) {
+    if (!profile || !profile.lesson) return '';
     options = options || {};
-    ensureProfile();
-    const p = state.profile;
+    const p = profile;
     const name = state.name;
-    const lessonNames = {
-      18: 'قیام و حکومت‌های ایرانی',
-      19: 'سلجوقیان و وزیران کاردان',
-      20: 'حمله مغول و تیمور',
-      21: 'بازسازی ایران'
-    };
+    const lessonNames = { 18:'قیام و حکومت‌های ایرانی', 19:'سلجوقیان و وزیران کاردان', 20:'حمله مغول و تیمور', 21:'بازسازی ایران' };
     let html = '';
-
-    const totalWrong = [18,19,20,21].reduce((a, l) => a + p.lesson[l].w, 0);
+    const totalWrong = [18,19,20,21].reduce((a,l) => a + p.lesson[l].w, 0);
     let personality;
-    if (p.fastWins >= 4 && totalWrong <= 3) {
-      personality = `${name} جان، تو یه تاریخ‌دان سریع و دقیقی. مسلطی و بی‌درنگ جواب می‌دی. این ترکیب کمیابه.`;
-    } else if (p.slowCorrects >= 3) {
-      personality = `${name} جان، تو با دقت فکر می‌کنی. هیچ‌وقت بی‌گدار به آب نمی‌زنی و این ویژگی ارزشمندیه.`;
-    } else if (p.recovered >= 3) {
-      personality = `${name} جان، شکست‌ها تو رو متوقف نمی‌کنن. هر بار بعد از اشتباه قوی‌تر برمی‌گردی. این روح یه سردار واقعیه.`;
-    } else if (p.maxConsecutiveCorrect >= 5) {
-      personality = `${name} جان، وقتی شروع می‌کنی، پشت سر هم درست جواب می‌دی. این نشانه‌ی تسلط توئه.`;
-    } else {
-      personality = `${name} جان، تو یه تاریخ‌آموز کنجکاوی. راه رو تازه شروع کردی و این شروع قشنگیه.`;
-    }
+    if (p.fastWins >= 4 && totalWrong <= 3) personality = `${name} جان، تو یه تاریخ‌دان سریع و دقیقی.`;
+    else if (p.slowCorrects >= 3) personality = `${name} جان، تو با دقت فکر می‌کنی.`;
+    else if (p.recovered >= 3) personality = `${name} جان، شکست‌ها تو رو متوقف نمی‌کنن.`;
+    else if (p.maxConsecutiveCorrect >= 5) personality = `${name} جان، وقتی شروع می‌کنی، پشت سر هم درست جواب می‌دی.`;
+    else personality = `${name} جان، تو یه تاریخ‌آموز کنجکاوی.`;
     html += `<div class="hakim-report-line">${personality}</div>`;
 
     if (options.commander) {
       const cmd = options.commander;
-      html += `<div class="hakim-report-line" style="background:rgba(155,89,182,0.08);border-right-color:#9b59b6;">
-        ${cmd.icon || ''} <strong>سردارت:</strong> ${cmd.name} (${cmd.title || ''}) — ${cmd.desc || ''}
-      </div>`;
+      html += `<div class="hakim-report-line" style="background:rgba(155,89,182,0.08);border-right-color:#9b59b6;">${cmd.icon||''} <strong>سردارت:</strong> ${cmd.name} (${cmd.title||''}) — ${cmd.desc||''}</div>`;
     }
 
     html += '<div class="hakim-lesson-grid">';
     const lessonStats = [];
-    for (const lesson of [18, 19, 20, 21]) {
+    for (const lesson of [18,19,20,21]) {
       const l = p.lesson[lesson];
       const total = l.c + l.w;
       if (total === 0) continue;
       const pct = Math.round((l.c / total) * 100);
       let grade, color;
-      if (pct >= 80) { grade = 'عالی'; color = '#2ecc71'; }
-      else if (pct >= 60) { grade = 'خوب'; color = '#3498db'; }
-      else if (pct >= 40) { grade = 'قابل قبول'; color = '#e67e22'; }
-      else { grade = 'نیاز به مرور'; color = '#e74c3c'; }
-      lessonStats.push({ lesson, pct, c: l.c, w: l.w });
-      html += `<div class="hakim-lesson-item">
-        <div class="hl-name">درس ${toEnglishNum(lesson)}: ${lessonNames[lesson]}</div>
-        <div class="hl-bar"><div class="hl-fill" style="width:${pct}%;background:${color}"></div></div>
-        <div class="hl-stat" style="color:${color}">${grade} — ${toEnglishNum(l.c)} از ${toEnglishNum(total)}</div>
-      </div>`;
+      if (pct >= 80) { grade='عالی'; color='#2ecc71'; }
+      else if (pct >= 60) { grade='خوب'; color='#3498db'; }
+      else if (pct >= 40) { grade='قابل قبول'; color='#e67e22'; }
+      else { grade='نیاز به مرور'; color='#e74c3c'; }
+      lessonStats.push({ lesson, pct });
+      html += `<div class="hakim-lesson-item"><div class="hl-name">درس ${toEnglishNum(lesson)}: ${lessonNames[lesson]}</div><div class="hl-bar"><div class="hl-fill" style="width:${pct}%;background:${color}"></div></div><div class="hl-stat" style="color:${color}">${grade} — ${toEnglishNum(l.c)} از ${toEnglishNum(total)}</div></div>`;
     }
     html += '</div>';
 
-    const weakest = lessonStats.slice().sort((a, b) => a.pct - b.pct)[0];
+    const weakest = lessonStats.slice().sort((a,b) => a.pct - b.pct)[0];
     if (weakest && weakest.pct < 60) {
-      html += `<div class="hakim-report-line" style="background:rgba(245,200,66,0.10);border-right-color:#f5c842;">
-        📌 پیشنهاد من: یه بار دیگه درس ${toEnglishNum(weakest.lesson)} رو مرور کن.
-      </div>`;
+      html += `<div class="hakim-report-line" style="background:rgba(245,200,66,0.10);border-right-color:#f5c842;">📌 پیشنهاد من: یه بار دیگه درس ${toEnglishNum(weakest.lesson)} رو مرور کن.</div>`;
     } else if (lessonStats.length > 0) {
-      html += `<div class="hakim-report-line" style="background:rgba(46,204,113,0.10);border-right-color:#2ecc71;">
-        🌟 همه‌ی درس‌ها رو خوب بلدی ${name}. دفعه‌ی بعد یه بار دیگه بازی کن و ببین می‌تونی سریع‌تر جواب بدی.
-      </div>`;
+      html += `<div class="hakim-report-line" style="background:rgba(46,204,113,0.10);border-right-color:#2ecc71;">🌟 همه‌ی درس‌ها رو خوب بلدی ${name}.</div>`;
     }
-
     html += `<div class="hakim-report-sign">✦ حکیم، همراه تو در این سفر</div>`;
     return html;
   }
 
   // ============================================================
-  // 🌟 میان‌بُرها (mood shortcuts)
+  // 🌟 میان‌بُرها
   // ============================================================
-  const moodShortcuts = {};
+  const shortcuts = {};
   ['calm','happy','amazed','thinking','concerned','listening','celebrating','curious','proud'].forEach(m => {
-    moodShortcuts[m] = () => setMood(m);
+    shortcuts[m] = () => setMood(m);
   });
 
   // ============================================================
   // 🎁 API نهایی
   // ============================================================
   const api = Object.assign({
-    // Init
-    init,
-    // Faces & moods
-    setMood,
-    renderFace,
-    // Speaking
-    say,
-    sayRandom,
-    // Show/hide
+    init, setMood, renderFace,
+    say, sayRandom,
     show, hide, reset,
-    // Name
-    setName, getName,
-    // Profile
-    track,
-    react,
-    onCityConquered,
-    onLowHearts,
-    getProfile,
-    buildReport,
-    // Constants
+    setName, getName, isReady,
+    track, react, onCityConquered, onLowHearts,
+    buildReport, createProfile,
     FACES: HAKIM_FACES,
     PHRASES: HAKIM_PHRASES,
-    VERSION: '1.0.0'
-  }, moodShortcuts);
+    EMOJI_TO_MOOD,
+    utils: { fillTemplate, pickPhrase, toEnglishNum, getLessonFromQ },
+    VERSION: '2.0.0'
+  }, shortcuts);
 
   global.Hakim = api;
 
