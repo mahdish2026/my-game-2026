@@ -43,7 +43,6 @@
     --text: #f5edd6;
     --text-muted: #bda282;
     --green: #2ecc71;
-    --blue: #3498db;
     --shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
     --shadow-gold: 0 8px 30px rgba(245, 200, 66, 0.1);
     --font: 'Vazirmatn Local', 'Vazirmatn', Tahoma, sans-serif;
@@ -83,19 +82,19 @@
   /* ===== هدر ===== */
   .header {
     text-align: center;
-    padding: 20px 12px 18px;
-    margin-bottom: 16px;
+    padding: 24px 12px 20px;
+    margin-bottom: 18px;
   }
 
   .header-emblem {
-    font-size: 3rem;
+    font-size: 3.2rem;
     line-height: 1;
     margin-bottom: 8px;
     display: inline-block;
   }
 
   .header-title {
-    font-size: clamp(1.9rem, 6.5vw, 2.4rem);
+    font-size: clamp(2rem, 7vw, 2.5rem);
     font-weight: 900;
     background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
     -webkit-background-clip: text;
@@ -108,7 +107,7 @@
   }
 
   .header-slogan {
-    font-size: clamp(0.82rem, 3.2vw, 0.92rem);
+    font-size: clamp(0.85rem, 3.3vw, 0.95rem);
     color: var(--text-muted);
     letter-spacing: 1.2px;
     font-weight: 600;
@@ -127,7 +126,7 @@
     border: 1.5px solid rgba(197, 148, 26, 0.35);
     border-radius: 18px;
     padding: 16px 18px;
-    margin-bottom: 20px;
+    margin-bottom: 22px;
     display: flex;
     align-items: center;
     gap: 14px;
@@ -227,7 +226,7 @@
     min-width: 20px;
   }
 
-  /* ===== کارت بازی (قهرمان صفحه) ===== */
+  /* ===== کارت بازی ===== */
   .game-card {
     display: block;
     text-decoration: none;
@@ -264,7 +263,6 @@
     outline: none;
   }
 
-  /* ===== ردیف بالا کارت (آیکون + نام) ===== */
   .game-top {
     display: flex;
     align-items: center;
@@ -306,7 +304,6 @@
     font-weight: 500;
   }
 
-  /* ===== برچسب‌های متادیتا ===== */
   .game-meta {
     display: flex;
     flex-wrap: wrap;
@@ -325,7 +322,6 @@
     line-height: 1.5;
   }
 
-  /* ===== راهنمای گام‌ها داخل کارت ===== */
   .game-steps {
     display: flex;
     align-items: center;
@@ -368,7 +364,6 @@
     font-size: 0.7rem;
   }
 
-  /* ===== دکمه CTA در پایین کارت ===== */
   .game-cta {
     display: flex;
     align-items: center;
@@ -400,91 +395,6 @@
 
   .game-card:hover .game-arrow {
     transform: translateX(-5px) scale(1.08);
-  }
-
-  /* ===== کارت معلم ===== */
-  .teacher-card {
-    display: block;
-    text-decoration: none;
-    background: var(--card);
-    border: 1.5px solid rgba(52, 152, 219, 0.4);
-    border-radius: 16px;
-    padding: 16px;
-    margin-bottom: 22px;
-    transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
-    box-shadow: var(--shadow);
-    color: inherit;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .teacher-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, var(--blue), transparent);
-    opacity: 0.6;
-  }
-
-  .teacher-card:hover,
-  .teacher-card:focus-visible {
-    transform: translateY(-3px);
-    border-color: var(--blue);
-    box-shadow: 0 12px 30px rgba(52, 152, 219, 0.18);
-    outline: none;
-  }
-
-  .teacher-card-inner {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .teacher-icon {
-    flex-shrink: 0;
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    background: rgba(52, 152, 219, 0.12);
-    border: 1.5px solid rgba(52, 152, 219, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-  }
-
-  .teacher-info {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .teacher-name {
-    font-size: 1rem;
-    font-weight: 800;
-    color: #a8d8ff;
-    margin-bottom: 3px;
-    line-height: 1.5;
-  }
-
-  .teacher-desc {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    line-height: 1.6;
-    font-weight: 500;
-  }
-
-  .teacher-arrow {
-    flex-shrink: 0;
-    font-size: 1.15rem;
-    color: var(--blue);
-    transition: transform 0.25s ease;
-  }
-
-  .teacher-card:hover .teacher-arrow {
-    transform: translateX(-4px);
   }
 
   /* ===== بخش اطلاعات ===== */
@@ -619,20 +529,6 @@
     .step-mini .arrow {
       display: none;
     }
-
-    .teacher-icon {
-      width: 44px;
-      height: 44px;
-      font-size: 1.35rem;
-    }
-
-    .teacher-name {
-      font-size: 0.92rem;
-    }
-
-    .teacher-desc {
-      font-size: 0.7rem;
-    }
   }
 
   @media (max-width: 340px) {
@@ -663,7 +559,7 @@
   }
 
   @media (prefers-contrast: high) {
-    .game-desc, .teacher-desc, .info-text, .hakim-text {
+    .game-desc, .info-text, .hakim-text {
       color: #ffffff;
     }
   }
@@ -726,7 +622,6 @@
   </h2>
 
   <a href="games/kohan-diyar.html" class="game-card" aria-label="شروع بازی فتح کهن دیار ایران">
-    <!-- ردیف بالا: آیکون + نام + توضیح -->
     <div class="game-top">
       <div class="game-icon" aria-hidden="true">🏰</div>
       <div class="game-headline">
@@ -735,14 +630,12 @@
       </div>
     </div>
 
-    <!-- برچسب‌ها -->
     <div class="game-meta">
       <span class="game-tag">📘 مطالعات اجتماعی</span>
       <span class="game-tag">پایه پنجم</span>
       <span class="game-tag">دروس ۱۸ تا ۲۱</span>
     </div>
 
-    <!-- راهنمای گام‌ها (ادغام‌شده) -->
     <div class="game-steps" aria-label="راهنمای شروع">
       <div class="step-mini">
         <span class="num">۱</span>
@@ -760,28 +653,9 @@
       </div>
     </div>
 
-    <!-- دکمه CTA -->
     <div class="game-cta">
       <span class="game-cta-text">آماده‌ی فتح هستی؟</span>
       <span class="game-arrow" aria-hidden="true">←</span>
-    </div>
-  </a>
-
-  <!-- ===== پنل معلم ===== -->
-  <h2 class="section-title">
-    <span class="icon" aria-hidden="true">🛠️</span>
-    <span>برای معلمان</span>
-    <span class="line" aria-hidden="true"></span>
-  </h2>
-
-  <a href="games/teacher.html" class="teacher-card" aria-label="ورود به پنل معلم">
-    <div class="teacher-card-inner">
-      <div class="teacher-icon" aria-hidden="true">🔐</div>
-      <div class="teacher-info">
-        <div class="teacher-name">پنل معلم</div>
-        <p class="teacher-desc">مشاهده نتایج دانش‌آموزان، تحلیل درس‌به‌درس، و دریافت گزارش‌ها.</p>
-      </div>
-      <div class="teacher-arrow" aria-hidden="true">←</div>
     </div>
   </a>
 
